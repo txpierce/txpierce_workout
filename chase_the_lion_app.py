@@ -261,190 +261,425 @@ elif menu == "12-Week Lift Engine (Real-Time Tracker)":
 
     st.markdown("---")
 
-    workouts = {
-        "Day 1: Push (Chest / Shoulders / Triceps)": [
-            {"series": "A-Series", "exercise": "Incline Barbell Bench Press", "sets": 5, "reps": "5", "rpe": "8", "rest": "3 min", "default_wt": 185},
-            {"series": "B1", "exercise": "Flat Barbell Volume Press", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 155},
-            {"series": "B2", "exercise": "Chest-Supported Dumbbell Row", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 65},
-            {"series": "C1", "exercise": "Dumbbell Arnold Press", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 45},
-            {"series": "C2", "exercise": "Overhead Cable Tricep Extension", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 50},
-            {"series": "D1", "exercise": "Low-to-High Cable Fly", "sets": 3, "reps": "15-20", "rpe": "9", "rest": "45 sec", "default_wt": 30},
-            {"series": "D2", "exercise": "DB Lateral Raise -> Push-Up Finisher", "sets": 2, "reps": "15-20 / AMRAP", "rpe": "10", "rest": "45 sec", "default_wt": 20}
-        ],
-        "Day 2: Pull (Back / Rear Delts / Biceps)": [
-            {"series": "A-Series", "exercise": "Barbell Pendlay Row", "sets": 5, "reps": "5", "rpe": "8", "rest": "3 min", "default_wt": 175},
-            {"series": "B1", "exercise": "Neutral Grip Lat Pulldown", "sets": 3, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 140},
-            {"series": "B2", "exercise": "Incline Dumbbell Bicep Curl", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 30},
-            {"series": "C1", "exercise": "Face Pulls with Rope", "sets": 3, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 42.5},
-            {"series": "C2", "exercise": "Standing EZ-Bar Hammer Curls", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 55}
-        ],
-        "Day 3: Lower Hypertrophy (Quads / Hamstrings / Calves)": [
-            {"series": "A-Series", "exercise": "Barbell Back Squat", "sets": 5, "reps": "5", "rpe": "8", "rest": "3 min", "default_wt": 225},
-            {"series": "B1", "exercise": "Barbell Romanian Deadlift (RDL)", "sets": 3, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 185},
-            {"series": "B2", "exercise": "Walking DB Lunges", "sets": 3, "reps": "10 / leg", "rpe": "8", "rest": "90 sec", "default_wt": 40},
-            {"series": "C1", "exercise": "Seated Hamstring Leg Curl", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 110},
-            {"series": "C2", "exercise": "Standing Calf Raises", "sets": 4, "reps": "15-20", "rpe": "9", "rest": "45 sec", "default_wt": 150}
-        ],
-        "Day 4: Active Recovery & Mobility": [
-            {"series": "Recovery", "exercise": "Thoracic & Hip Mobility Circuit", "sets": 3, "reps": "10 mins", "rpe": "4", "rest": "None", "default_wt": 0},
-            {"series": "Recovery", "exercise": "Diaphragmatic Breathing & Foam Rolling", "sets": 1, "reps": "15 mins", "rpe": "3", "rest": "None", "default_wt": 0},
-            {"series": "Recovery", "exercise": "45-Min Outdoor Zone 2 Walk", "sets": 1, "reps": "45 mins", "rpe": "5", "rest": "None", "default_wt": 0}
-        ],
-        "Day 5: Upper Hypertrophy / Pump": [
-            {"series": "B1", "exercise": "Incline Dumbbell Chest Press", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 70},
-            {"series": "B2", "exercise": "Seated Cable Row (Wide Grip)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 130},
-            {"series": "C1", "exercise": "Standing Cable Lateral Raises", "sets": 3, "reps": "15", "rpe": "8", "rest": "60 sec", "default_wt": 20},
-            {"series": "C2", "exercise": "Incline Dumbbell Flyes", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 35},
-            {"series": "D1", "exercise": "Tricep Rope Pushdown & DB Bicep Curl Super-Set", "sets": 3, "reps": "15 / 12", "rpe": "9", "rest": "45 sec", "default_wt": 40}
-        ],
-        "Day 6: Arms, Calves & Core (Optional)": [
-            {"series": "C1", "exercise": "EZ-Bar Preacher Curl", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 60},
-            {"series": "C2", "exercise": "Lying Tricep Skullcrushers", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 65},
-            {"series": "C3", "exercise": "Hanging Leg Raises / Captain's Chair", "sets": 4, "reps": "15", "rpe": "8", "rest": "45 sec", "default_wt": 0}
-        ],
-        "Day 7: Off & Regeneration": [
-            {"series": "Rest", "exercise": "Full Body Rest & Joint Recovery", "sets": 1, "reps": "Full Day", "rpe": "0", "rest": "N/A", "default_wt": 0}
-        ]
+    # WEEKLY DETAILS & TACTICAL TIPS MATRIX
+    WEEK_DETAILS = {
+        "Week 1 (Baseline)": {
+            "title": "WEEK 1 — BASELINE WEEK: Movement Quality & Execution",
+            "focus": "Build movement quality, tissue tolerance, and structural balance. Baseline 5x5 @ RPE 8 on main lifts.",
+            "tips": "💡 **Tactical Tip:** Keep execution clean and technical. Pre-workout fueling at 4:15 AM (30g Carbs / 10g Protein) ensures glycogen stores are primed for heavy A-Series lifts."
+        },
+        "Week 2 (Progression)": {
+            "title": "WEEK 2 — PROGRESSION WEEK: Volume & Harder Variations",
+            "focus": "Increase volume by adding +1 set across B-Series exercises. A-Series progresses to 5x6 @ RPE 8. Focus on stability under fatigue.",
+            "tips": "💡 **Tactical Tip:** Add +5-10 lbs on A-Series if form was rock solid in Week 1. B-Series supersets expand to 4 working sets."
+        },
+        "Week 3 (Peak Base Volume)": {
+            "title": "WEEK 3 — COMPLEXITY WEEK: Higher Intensity & C-Series Peak",
+            "focus": "A-Series shifts to 6x4 @ RPE 8-9 for power and precision. C-Series isolation volume increases with +1 set and higher reps (15-20).",
+            "tips": "💡 **Tactical Tip:** Push load on 6x4 sets while maintaining strict form. Embrace metabolic fatigue in C-Series isolation work."
+        },
+        "Week 4 (Deload & Test)": {
+            "title": "WEEK 4 — PEAK BASE WEEK: Peak Volume & Joint-Friendly Deload",
+            "focus": "Deload A-Series load (4x8 @ RPE 7-8) to protect joints before Phase 2. Peak weekly workload across B and C series isolation patterns.",
+            "tips": "💡 **Tactical Tip:** Drop A-Series load by 10-15% to let joints recover, but push maximal pump in machine and cable isolation movements."
+        },
+        "Week 5 (Structural Intro)": {
+            "title": "WEEK 5 — STRUCTURAL SHIFT: New Patterns & New Angles",
+            "focus": "Phase 2 starts! Introduces new primary A-Series lifts (Incline BB Bench, Weighted Pull-Ups, Hack Squat) and new structural balance angles.",
+            "tips": "💡 **Tactical Tip:** Focus on learning new movement grooves. Keep rep schemes familiar (5x5 / 4x6-8) while adapting to new exercise angles."
+        },
+        "Week 6 (Eccentric Tempo)": {
+            "title": "WEEK 6 — VOLUME & TEMPO WORK: 3-Second Negative Emphasis",
+            "focus": "Increases total weekly volume (+1 set in B/C) and introduces controlled tempo: 3-second eccentric (lowering) + 1-second stretch pause.",
+            "tips": "💡 **Tactical Tip:** Count '1-thousand-1, 1-thousand-2, 1-thousand-3' on every negative. Do not bounce out of the bottom stretch position!"
+        },
+        "Week 7 (Density Peak)": {
+            "title": "WEEK 7 — HIGH-DENSITY SHOCK WEEK: Tri-Sets & 60-75s Rest",
+            "focus": "Hypertrophy shock week! B-Series supersets convert into non-competing tri-sets. Rest periods drop to 60-75 seconds to drive metabolic fatigue.",
+            "tips": "💡 **Tactical Tip:** Move continuously between exercises 1, 2, and 3 in each tri-set with ZERO rest between movements, then take 60-75s rest."
+        },
+        "Week 8 (Deload)": {
+            "title": "WEEK 8 — PEAK HYPERTROPHY WEEK (PHASE 2): Maximum Volume",
+            "focus": "Peak hypertrophy stimulus of Phase 2! Mechanical drop sets, highest volume & density, with a joint-protective load drop on A-Series (RPE 7).",
+            "tips": "💡 **Tactical Tip:** Mechanical drop sets allow you to maintain execution under high fatigue without risking joint strain."
+        },
+        "Week 9 (Hypertrophy Intro)": {
+            "title": "WEEK 9 — ENTRY TO PEAK HYPERTROPHY: Double Supersets & 3s Tempo",
+            "focus": "Phase 3 begins! System shifts to pure metabolic hypertrophy. A-Series loads drop (8-12 reps @ RPE 7), B-Series introduces double supersets.",
+            "tips": "💡 **Tactical Tip:** Lower A-Series loads slightly to preserve joint integrity while driving maximum fiber recruitment through double supersets."
+        },
+        "Week 10 (Double Supersets)": {
+            "title": "WEEK 10 — HIGH-DENSITY HYPERTROPHY: Tri-Sets & 45-60s Rest",
+            "focus": "Push density further by converting supersets into tri-sets and shortening rest to 45-60 seconds. Focus on stretch-mediated hypertrophy.",
+            "tips": "💡 **Tactical Tip:** Keep intra-workout hydration high. Short rest periods will cause a massive skin-splitting blood flow pump."
+        },
+        "Week 11 (Peak Fiber Recruitment)": {
+            "title": "WEEK 11 — METABOLIC PEAK WEEK: Mechanical Drop Sets & 4s Negative",
+            "focus": "The hardest hypertrophy week of the entire 12-week program! Mechanical drop sets, 4-second eccentric negatives, and 30-45s rest intervals.",
+            "tips": "💡 **Tactical Tip:** Pure mental toughness week! Protect your joints with lighter loads while pushing maximum metabolic stress."
+        },
+        "Week 12 (Pump Deload)": {
+            "title": "WEEK 12 — PUMP DELOAD: Joint Flush & Recovery",
+            "focus": "Joint-friendly pump week. Light loads (RPE 6), moderate reps (12-15), supersets only (no tri-sets or drop sets), 60-75s rest. No failure.",
+            "tips": "💡 **Tactical Tip:** Do NOT go to failure! Maintain full movement quality and pump to flush joints and facilitate systemic recovery."
+        }
     }
 
-    current_workout = workouts.get(day, [])
+    week_info = WEEK_DETAILS.get(week, {
+        "title": f"{week} Overview",
+        "focus": "Follow the progressive overload matrix for this session.",
+        "tips": "💡 **Tactical Tip:** Focus on form, mind-muscle connection, and proper rest intervals."
+    })
 
-    total_target_sets = sum([ex["sets"] for ex in current_workout])
-    completed_sets_count = 0
-    workout_key_prefix = f"{phase}_{week}_{day}"
+    st.info(f"### 🎯 {week_info['title']}\n**Weekly Focus:** {week_info['focus']}\n\n{week_info['tips']}")
 
-    for idx, ex in enumerate(current_workout):
-        for s in range(1, ex["sets"] + 1):
-            set_key = f"{workout_key_prefix}_ex{idx}_set{s}"
-            if st.session_state.get(set_key, False):
-                completed_sets_count += 1
+    # WORKOUT MATRIX DEFINITIONS FOR ALL WEEKS
+    def get_workout_for_week(week_str, day_str):
+        # Base templates modified dynamically by week progression
+        if "Day 4" in day_str:
+            return [
+                {"series": "Recovery", "exercise": "Thoracic & Hip Mobility Circuit", "sets": 3, "reps": "10 mins", "rpe": "4", "rest": "None", "default_wt": 0},
+                {"series": "Recovery", "exercise": "Diaphragmatic Breathing & Foam Rolling", "sets": 1, "reps": "15 mins", "rpe": "3", "rest": "None", "default_wt": 0},
+                {"series": "Recovery", "exercise": "45-Min Outdoor Zone 2 Walk", "sets": 1, "reps": "45 mins", "rpe": "5", "rest": "None", "default_wt": 0}
+            ]
+        elif "Day 7" in day_str:
+            return [
+                {"series": "Rest", "exercise": "Full Body Rest & Joint Recovery", "sets": 1, "reps": "Full Day", "rpe": "0", "rest": "N/A", "default_wt": 0}
+            ]
 
-    st.subheader("⏱️ Real-Time Workout Progress")
-    p_col1, p_col2 = st.columns([3, 1])
-    with p_col1:
-        progress_pct = completed_sets_count / total_target_sets if total_target_sets > 0 else 1.0
-        st.progress(progress_pct)
-    with p_col2:
-        st.metric("Sets Completed", f"{completed_sets_count} / {total_target_sets}", f"{int(progress_pct * 100)}%")
+        # PHASE 1 (WEEKS 1-4)
+        if "Week 1" in week_str:
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Overhead Barbell Press", "sets": 5, "reps": "5", "rpe": "8", "rest": "2-3 min", "default_wt": 90},
+                    {"series": "B1", "exercise": "Flat DB Bench Press", "sets": 3, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 55},
+                    {"series": "B1", "exercise": "Chest-Supported T-Bar Row", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 45},
+                    {"series": "B2", "exercise": "Seated DB Arnold Press", "sets": 3, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 30},
+                    {"series": "B2", "exercise": "Skull Crushers", "sets": 3, "reps": "6-8", "rpe": "8", "rest": "90 sec", "default_wt": 80},
+                    {"series": "C1", "exercise": "Cable Crossover", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 30},
+                    {"series": "C2", "exercise": "Tricep Extension", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 80},
+                    {"series": "D1", "exercise": "DB Lateral Raise -> Push-Up", "sets": 2, "reps": "15-20 / AMRAP", "rpe": "8", "rest": "60 sec", "default_wt": 15}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Pendlay Row", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2-3 min", "default_wt": 135},
+                    {"series": "B1", "exercise": "Chin-Up", "sets": 3, "reps": "AMRAP", "rpe": "8", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B1", "exercise": "Face Pull", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 40},
+                    {"series": "B2", "exercise": "Seated Cable Row", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 100},
+                    {"series": "B2", "exercise": "DB Hammer Curl", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "C1", "exercise": "Incline DB Y-Raise", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 15},
+                    {"series": "C2", "exercise": "EZ Bar Preacher Curl", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 40},
+                    {"series": "D1", "exercise": "Lat Pulldown -> DB Curl", "sets": 2, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 100}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Front Squat", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2-3 min", "default_wt": 135},
+                    {"series": "B1", "exercise": "Romanian Deadlift", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 135},
+                    {"series": "B1", "exercise": "DB Walking Lunges", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 30},
+                    {"series": "B2", "exercise": "Glute Ham Raise", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B2", "exercise": "Seated Calf Raise", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 90},
+                    {"series": "C1", "exercise": "Leg Extension", "sets": 3, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 50},
+                    {"series": "C2", "exercise": "Split Squat ISO Hold", "sets": 3, "reps": "20-30 sec", "rpe": "8", "rest": "90 sec", "default_wt": 0}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline DB Press", "sets": 3, "reps": "10-12", "rpe": "7", "rest": "90 sec", "default_wt": 55},
+                    {"series": "B1", "exercise": "Machine Chest Press", "sets": 3, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B1", "exercise": "V-Grip Cable Row", "sets": 3, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B2", "exercise": "Cable Lateral Raise", "sets": 3, "reps": "15-20", "rpe": "7", "rest": "60 sec", "default_wt": 20},
+                    {"series": "B2", "exercise": "Tricep Rope Pushdown", "sets": 3, "reps": "10-12", "rpe": "7", "rest": "90 sec", "default_wt": 40},
+                    {"series": "C1", "exercise": "Straight-Arm Pulldown", "sets": 3, "reps": "12-15", "rpe": "7", "rest": "60 sec", "default_wt": 60},
+                    {"series": "C2", "exercise": "DB Spider Curl", "sets": 3, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 25},
+                    {"series": "D1", "exercise": "Low-to-High Fly -> Rope Ext -> Face Pull", "sets": 2, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 25}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Cable Curl", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C2", "exercise": "Overhead Rope Extension", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C3", "exercise": "Preacher Curl", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "D1", "exercise": "Standing Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 135},
+                    {"series": "D2", "exercise": "Cable Crunch & Hanging Knee Raise", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "45 sec", "default_wt": 50}
+                ]
 
-    st.markdown("---")
-    st.subheader("💪 Exercise & Set Tracker Matrix")
+        elif "Week 2" in week_str:
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Overhead Barbell Press", "sets": 5, "reps": "6", "rpe": "8", "rest": "2-3 min", "default_wt": 95},
+                    {"series": "B1", "exercise": "Close-Grip Bench Press", "sets": 4, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 135},
+                    {"series": "B1", "exercise": "High-Row Machine", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 50},
+                    {"series": "B2", "exercise": "Seated DB Arnold Press", "sets": 4, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 30},
+                    {"series": "B2", "exercise": "Skull Crushers", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "90 sec", "default_wt": 40},
+                    {"series": "C1", "exercise": "High-to-Low Cable Fly", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 30},
+                    {"series": "C2", "exercise": "Rope Overhead Tricep Extension", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 35}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Pendlay Row", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2-3 min", "default_wt": 140},
+                    {"series": "B1", "exercise": "Chin-Up", "sets": 4, "reps": "AMRAP", "rpe": "8", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B1", "exercise": "Face Pull", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 40},
+                    {"series": "B2", "exercise": "Seated Cable Row", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 100},
+                    {"series": "B2", "exercise": "DB Hammer Curl", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "C1", "exercise": "Incline DB Y-Raise", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 15},
+                    {"series": "C2", "exercise": "EZ Bar Preacher Curl", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 40}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Front Squat", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2-3 min", "default_wt": 140},
+                    {"series": "B1", "exercise": "Romanian Deadlift", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 135},
+                    {"series": "B1", "exercise": "DB Walking Lunges", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 30},
+                    {"series": "B2", "exercise": "Glute Ham Raise", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B2", "exercise": "Seated Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 90}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline DB Press", "sets": 3, "reps": "10-12", "rpe": "7", "rest": "90 sec", "default_wt": 60},
+                    {"series": "B1", "exercise": "Machine Chest Press", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B1", "exercise": "V-Grip Cable Row", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B2", "exercise": "Cable Lateral Raise", "sets": 4, "reps": "15-20", "rpe": "7", "rest": "60 sec", "default_wt": 20},
+                    {"series": "B2", "exercise": "Tricep Rope Pushdown", "sets": 4, "reps": "10-12", "rpe": "7", "rest": "90 sec", "default_wt": 40}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Cable Curl", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C2", "exercise": "Overhead Rope Extension", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C3", "exercise": "Preacher Curl", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "D1", "exercise": "Standing Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 135}
+                ]
 
-    for idx, ex in enumerate(current_workout):
-        with st.expander(f"📌 {ex['series']} | {ex['exercise']} ({ex['sets']} Sets x {ex['reps']} Reps @ RPE {ex['rpe']})", expanded=True):
-            col_info, col_input, col_sets = st.columns([2, 1, 3])
+        elif "Week 3" in week_str:
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Overhead Barbell Press", "sets": 6, "reps": "4", "rpe": "8-9", "rest": "2-3 min", "default_wt": 105},
+                    {"series": "B1", "exercise": "Incline DB Press", "sets": 4, "reps": "8-10", "rpe": "8-9", "rest": "90 sec", "default_wt": 55},
+                    {"series": "B1", "exercise": "Face Pull", "sets": 4, "reps": "12-15", "rpe": "8-9", "rest": "90 sec", "default_wt": 45},
+                    {"series": "B2", "exercise": "Seated DB Arnold Press", "sets": 4, "reps": "8-10", "rpe": "8-9", "rest": "90 sec", "default_wt": 35},
+                    {"series": "B2", "exercise": "Skull Crushers", "sets": 4, "reps": "6-8", "rpe": "8-9", "rest": "90 sec", "default_wt": 45},
+                    {"series": "C1", "exercise": "Cable Press-Out", "sets": 4, "reps": "15-20", "rpe": "8-9", "rest": "60 sec", "default_wt": 30},
+                    {"series": "C2", "exercise": "Single-Arm Tricep Extension", "sets": 4, "reps": "15-20", "rpe": "8-9", "rest": "90 sec", "default_wt": 25}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Pendlay Row", "sets": 6, "reps": "4", "rpe": "8-9", "rest": "2-3 min", "default_wt": 145},
+                    {"series": "B1", "exercise": "Chin-Up", "sets": 4, "reps": "AMRAP", "rpe": "8-9", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B1", "exercise": "Face Pull", "sets": 4, "reps": "12-15", "rpe": "8-9", "rest": "90 sec", "default_wt": 45},
+                    {"series": "B2", "exercise": "Seated Cable Row", "sets": 4, "reps": "10-12", "rpe": "8-9", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B2", "exercise": "DB Hammer Curl", "sets": 4, "reps": "10-12", "rpe": "8-9", "rest": "90 sec", "default_wt": 30},
+                    {"series": "C1", "exercise": "Incline DB Y-Raise", "sets": 4, "reps": "15-20", "rpe": "8-9", "rest": "60 sec", "default_wt": 15},
+                    {"series": "C2", "exercise": "EZ Bar Preacher Curl", "sets": 4, "reps": "15-20", "rpe": "8-9", "rest": "90 sec", "default_wt": 40}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Front Squat", "sets": 6, "reps": "4", "rpe": "8-9", "rest": "2-3 min", "default_wt": 145},
+                    {"series": "B1", "exercise": "Romanian Deadlift", "sets": 4, "reps": "12-15", "rpe": "8-9", "rest": "90 sec", "default_wt": 145},
+                    {"series": "B1", "exercise": "DB Walking Lunges", "sets": 4, "reps": "10-12", "rpe": "8-9", "rest": "90 sec", "default_wt": 35},
+                    {"series": "B2", "exercise": "Glute Ham Raise", "sets": 4, "reps": "10-12", "rpe": "8-9", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B2", "exercise": "Seated Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8-9", "rest": "90 sec", "default_wt": 100}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline DB Press", "sets": 4, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 60},
+                    {"series": "B1", "exercise": "Machine Chest Press", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 120},
+                    {"series": "B1", "exercise": "V-Grip Cable Row", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 120},
+                    {"series": "B2", "exercise": "Cable Lateral Raise", "sets": 4, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 20},
+                    {"series": "B2", "exercise": "Tricep Rope Pushdown", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 45}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Cable Curl", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C2", "exercise": "Overhead Rope Extension", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C3", "exercise": "Preacher Curl", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "D1", "exercise": "Standing Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 145}
+                ]
+
+        elif "Week 4" in week_str:
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Overhead Barbell Press", "sets": 4, "reps": "8", "rpe": "7-8", "rest": "2-3 min", "default_wt": 85},
+                    {"series": "B1", "exercise": "Machine Press", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B1", "exercise": "Chest-Supported Row", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 50},
+                    {"series": "B2", "exercise": "Seated DB Arnold Press", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "B2", "exercise": "Skull Crushers", "sets": 4, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 35},
+                    {"series": "C1", "exercise": "Pec Deck", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "60 sec", "default_wt": 100},
+                    {"series": "C2", "exercise": "Straight-Bar Pushdown", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "90 sec", "default_wt": 40}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Pendlay Row", "sets": 4, "reps": "8", "rpe": "7-8", "rest": "2-3 min", "default_wt": 120},
+                    {"series": "B1", "exercise": "Chin-Up", "sets": 4, "reps": "AMRAP", "rpe": "8", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B1", "exercise": "Face Pull", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 40},
+                    {"series": "B2", "exercise": "Seated Cable Row", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 100},
+                    {"series": "B2", "exercise": "DB Hammer Curl", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "C1", "exercise": "Incline DB Y-Raise", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "60 sec", "default_wt": 12.5},
+                    {"series": "C2", "exercise": "EZ Bar Preacher Curl", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "90 sec", "default_wt": 35}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Front Squat", "sets": 4, "reps": "8", "rpe": "7-8", "rest": "2-3 min", "default_wt": 120},
+                    {"series": "B1", "exercise": "Romanian Deadlift", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 125},
+                    {"series": "B1", "exercise": "DB Walking Lunges", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "B2", "exercise": "Glute Ham Raise", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 0},
+                    {"series": "B2", "exercise": "Seated Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 80}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline DB Press", "sets": 3, "reps": "12", "rpe": "7", "rest": "90 sec", "default_wt": 50},
+                    {"series": "B1", "exercise": "Machine Chest Press", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 100},
+                    {"series": "B1", "exercise": "V-Grip Cable Row", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 100},
+                    {"series": "B2", "exercise": "Cable Lateral Raise", "sets": 4, "reps": "15-20", "rpe": "7", "rest": "60 sec", "default_wt": 15},
+                    {"series": "B2", "exercise": "Tricep Rope Pushdown", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "90 sec", "default_wt": 35}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Cable Curl", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "60 sec", "default_wt": 35},
+                    {"series": "C2", "exercise": "Overhead Rope Extension", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "60 sec", "default_wt": 35},
+                    {"series": "C3", "exercise": "Preacher Curl", "sets": 4, "reps": "12-15", "rpe": "7-8", "rest": "60 sec", "default_wt": 35},
+                    {"series": "D1", "exercise": "Standing Calf Raise", "sets": 4, "reps": "15-20", "rpe": "7-8", "rest": "60 sec", "default_wt": 120}
+                ]
+
+        # PHASE 2 (WEEKS 5-8)
+        elif "Week 5" in week_str or "Week 6" in week_str:
+            sets_b = 4 if "Week 6" in week_str else 3
+            reps_a = "8 (3s Eccentric)" if "Week 6" in week_str else "5"
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline Barbell Bench Press", "sets": 5, "reps": reps_a, "rpe": "8", "rest": "2-3 min", "default_wt": 135},
+                    {"series": "B1", "exercise": "Flat Barbell Volume Press", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 135},
+                    {"series": "B1", "exercise": "Chest-Supported High Row", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 55},
+                    {"series": "B2", "exercise": "DB Arnold Press", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 30},
+                    {"series": "B2", "exercise": "Overhead Cable Tricep Extension", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 40},
+                    {"series": "C1", "exercise": "Low-to-High Cable Fly", "sets": 3, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 25},
+                    {"series": "C2", "exercise": "Single-Arm Cross-Body Tricep Extension", "sets": 3, "reps": "15-20", "rpe": "8", "rest": "90 sec", "default_wt": 25}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Weighted Pull-Up", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2-3 min", "default_wt": 10},
+                    {"series": "B1", "exercise": "Meadows Row / Landmine Row", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 60},
+                    {"series": "B1", "exercise": "Cable Face Pull w/ External Rotation", "sets": sets_b, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 45},
+                    {"series": "B2", "exercise": "Lat Pulldown (Neutral Grip)", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 100},
+                    {"series": "B2", "exercise": "Incline DB Bicep Curl", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "C1", "exercise": "Cable Reverse Fly", "sets": 3, "reps": "15-20", "rpe": "8", "rest": "60 sec", "default_wt": 20},
+                    {"series": "C2", "exercise": "EZ-Bar Preacher Curl", "sets": 3, "reps": "15-20", "rpe": "8", "rest": "90 sec", "default_wt": 40}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Hack Squat (or Safety Bar Squat)", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2-3 min", "default_wt": 145},
+                    {"series": "B1", "exercise": "Deficit Romanian Deadlift", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 135},
+                    {"series": "B1", "exercise": "Bulgarian Split Squats", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 30},
+                    {"series": "B2", "exercise": "Lying Leg Curl", "sets": sets_b, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 60},
+                    {"series": "B2", "exercise": "Standing Calf Raise", "sets": sets_b, "reps": "12-15", "rpe": "8", "rest": "90 sec", "default_wt": 135}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Flat DB Press", "sets": 3, "reps": "10-12", "rpe": "7-8", "rest": "90 sec", "default_wt": 60},
+                    {"series": "B1", "exercise": "Incline Cable Fly", "sets": sets_b, "reps": "12-15", "rpe": "7-8", "rest": "90 sec", "default_wt": 25},
+                    {"series": "B1", "exercise": "Seated Cable Row (Wide Grip)", "sets": sets_b, "reps": "12-15", "rpe": "7-8", "rest": "90 sec", "default_wt": 110},
+                    {"series": "B2", "exercise": "Lean-Away Cable Lateral Raise", "sets": sets_b, "reps": "15-20", "rpe": "7-8", "rest": "60 sec", "default_wt": 15},
+                    {"series": "B2", "exercise": "Tricep Straight-Bar Pushdown", "sets": sets_b, "reps": "12-15", "rpe": "7-8", "rest": "90 sec", "default_wt": 40}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Dual-Cable Bicep Curl", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 35},
+                    {"series": "C2", "exercise": "Overhead Rope Tricep Extension", "sets": 3, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 40},
+                    {"series": "C3", "exercise": "DB Hammer Curl", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "60 sec", "default_wt": 30},
+                    {"series": "D1", "exercise": "Standing Calf Raise", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "60 sec", "default_wt": 145}
+                ]
+
+        elif "Week 7" in week_str or "Week 8" in week_str:
+            is_wk8 = "Week 8" in week_str
+            rest_tri = "45-60 sec" if is_wk8 else "60-75 sec"
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline Barbell Bench Press", "sets": 4, "reps": "5-8", "rpe": "7-8", "rest": "60-90 sec", "default_wt": 135},
+                    {"series": "B1 Tri-Set", "exercise": "Flat Barbell Press (Mid-Range)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "None", "default_wt": 135},
+                    {"series": "B2 Tri-Set", "exercise": "Chest-Supported Row (Stretch)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "None", "default_wt": 55},
+                    {"series": "B3 Tri-Set", "exercise": "Low-to-High Fly (Contraction)", "sets": 4, "reps": "12-15", "rpe": "8", "rest": rest_tri, "default_wt": 20},
+                    {"series": "C1", "exercise": "Pec Deck (Pure Pump Isolation)", "sets": 3, "reps": "15-25", "rpe": "8", "rest": "45 sec", "default_wt": 90},
+                    {"series": "C2", "exercise": "Straight-Bar Pushdown", "sets": 3, "reps": "15-25", "rpe": "8", "rest": "45 sec", "default_wt": 35}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Weighted Pull-Up", "sets": 4, "reps": "6", "rpe": "7-8", "rest": "60-90 sec", "default_wt": 10},
+                    {"series": "B1 Tri-Set", "exercise": "Meadows Row (Mid-Range)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "None", "default_wt": 60},
+                    {"series": "B2 Tri-Set", "exercise": "Neutral Lat Pulldown (Stretch)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "None", "default_wt": 100},
+                    {"series": "B3 Tri-Set", "exercise": "Face Pull (Short-Range)", "sets": 4, "reps": "12-15", "rpe": "8", "rest": rest_tri, "default_wt": 40},
+                    {"series": "C1", "exercise": "Cable Reverse Fly", "sets": 3, "reps": "15-25", "rpe": "8", "rest": "45 sec", "default_wt": 15},
+                    {"series": "C2", "exercise": "Straight-Arm Lat Pulldown", "sets": 3, "reps": "15-25", "rpe": "8", "rest": "45 sec", "default_wt": 35}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Hack Squat", "sets": 4, "reps": "8", "rpe": "7-8", "rest": "60-90 sec", "default_wt": 135},
+                    {"series": "B1 Tri-Set", "exercise": "Hack Squat (Mid-Range)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": "None", "default_wt": 135},
+                    {"series": "B2 Tri-Set", "exercise": "Leg Extension (Contraction)", "sets": 4, "reps": "12-15", "rpe": "8", "rest": "None", "default_wt": 50},
+                    {"series": "B3 Tri-Set", "exercise": "Deficit RDL (Stretch)", "sets": 4, "reps": "10-12", "rpe": "8", "rest": rest_tri, "default_wt": 135},
+                    {"series": "C1", "exercise": "Standing Calf Raise", "sets": 3, "reps": "15-25", "rpe": "8", "rest": "45 sec", "default_wt": 120}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Flat DB Press", "sets": 4, "reps": "10-12", "rpe": "7", "rest": "60-90 sec", "default_wt": 55},
+                    {"series": "B1 Tri-Set", "exercise": "Incline Cable Fly", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "None", "default_wt": 20},
+                    {"series": "B2 Tri-Set", "exercise": "Seated Cable Row", "sets": 4, "reps": "12-15", "rpe": "7", "rest": "None", "default_wt": 100},
+                    {"series": "B3 Tri-Set", "exercise": "Lean-Away Lateral Raise", "sets": 4, "reps": "15-20", "rpe": "7", "rest": rest_tri, "default_wt": 15},
+                    {"series": "C1", "exercise": "Tricep Rope Pushdown", "sets": 3, "reps": "15-25", "rpe": "7-8", "rest": "45 sec", "default_wt": 35}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Dual-Cable Bicep Curl", "sets": 4, "reps": "15-20", "rpe": "8", "rest": "45 sec", "default_wt": 30},
+                    {"series": "C2", "exercise": "Overhead Rope Tricep Extension", "sets": 4, "reps": "15-20", "rpe": "8", "rest": "45 sec", "default_wt": 35},
+                    {"series": "C3", "exercise": "Standing Calf Raise", "sets": 4, "reps": "15-25", "rpe": "8", "rest": "45 sec", "default_wt": 135}
+                ]
+
+        # PHASE 3 (WEEKS 9-12)
+        elif "Week 9" in week_str or "Week 10" in week_str or "Week 11" in week_str or "Week 12" in week_str:
+            is_wk12 = "Week 12" in week_str
+            is_wk11 = "Week 11" in week_str
+            rest_val = "30-45 sec" if is_wk11 else ("60-75 sec" if is_wk12 else "45-60 sec")
+            rpe_val = "6" if is_wk12 else ("6-7" if is_wk11 else "7")
             
-            with col_info:
-                st.write(f"**Target Reps:** {ex['reps']}")
-                st.write(f"**Target RPE:** {ex['rpe']}")
-                st.write(f"**Recommended Rest:** {ex['rest']}")
-            
-            with col_input:
-                wt_key = f"{workout_key_prefix}_ex{idx}_wt"
-                weight_used = st.number_input(f"Weight Used (lbs)", value=ex['default_wt'], step=5, key=wt_key)
-                rpe_key = f"{workout_key_prefix}_ex{idx}_rpe_actual"
-                actual_rpe = st.number_input("Actual RPE", value=float(ex['rpe']), min_value=1.0, max_value=10.0, step=0.5, key=rpe_key)
+            if "Day 1" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Incline DB Bench Press (Controlled)", "sets": 4, "reps": "10-12", "rpe": rpe_val, "rest": rest_val, "default_wt": 60},
+                    {"series": "B1 Double Superset", "exercise": "Machine Chest Press", "sets": 4, "reps": "12-15", "rpe": rpe_val, "rest": "None", "default_wt": 110},
+                    {"series": "B2 Double Superset", "exercise": "High-to-Low Cable Fly", "sets": 4, "reps": "12-15", "rpe": rpe_val, "rest": rest_val, "default_wt": 25},
+                    {"series": "C1 Mechanical Drop Set", "exercise": "Dumbbell Lateral Raise", "sets": 3, "reps": "15-20", "rpe": rpe_val, "rest": "None", "default_wt": 20},
+                    {"series": "C2 Mechanical Drop Set", "exercise": "Tricep Overhead Rope Ext", "sets": 3, "reps": "15-20", "rpe": rpe_val, "rest": rest_val, "default_wt": 35}
+                ]
+            elif "Day 2" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Neutral Grip Weighted Pull-Up", "sets": 4, "reps": "8-10", "rpe": rpe_val, "rest": rest_val, "default_wt": 0},
+                    {"series": "B1 Double Superset", "exercise": "Chest-Supported T-Bar Row", "sets": 4, "reps": "12-15", "rpe": rpe_val, "rest": "None", "default_wt": 50},
+                    {"series": "B2 Double Superset", "exercise": "Straight-Arm Lat Pulldown", "sets": 4, "reps": "12-15", "rpe": rpe_val, "rest": rest_val, "default_wt": 40},
+                    {"series": "C1 Mechanical Drop Set", "exercise": "Incline DB Bicep Curl", "sets": 3, "reps": "15-20", "rpe": rpe_val, "rest": "None", "default_wt": 25},
+                    {"series": "C2 Mechanical Drop Set", "exercise": "Cable Reverse Fly", "sets": 3, "reps": "15-20", "rpe": rpe_val, "rest": rest_val, "default_wt": 15}
+                ]
+            elif "Day 3" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Hack Squat (4s Negative)", "sets": 4, "reps": "10-12", "rpe": rpe_val, "rest": rest_val, "default_wt": 135},
+                    {"series": "B1 Double Superset", "exercise": "Deficit Romanian Deadlift", "sets": 4, "reps": "12-15", "rpe": rpe_val, "rest": "None", "default_wt": 135},
+                    {"series": "B2 Double Superset", "exercise": "Leg Extension (Peak Contraction)", "sets": 4, "reps": "15-20", "rpe": rpe_val, "rest": rest_val, "default_wt": 55},
+                    {"series": "C1", "exercise": "Seated Calf Raise", "sets": 3, "reps": "20-25", "rpe": rpe_val, "rest": rest_val, "default_wt": 90}
+                ]
+            elif "Day 5" in day_str:
+                return [
+                    {"series": "A-Series", "exercise": "Flat DB Press", "sets": 4, "reps": "12-15", "rpe": rpe_val, "rest": rest_val, "default_wt": 50},
+                    {"series": "B1 Double Superset", "exercise": "Incline Cable Fly", "sets": 4, "reps": "15-20", "rpe": rpe_val, "rest": "None", "default_wt": 20},
+                    {"series": "B2 Double Superset", "exercise": "Seated Cable Row (Wide Grip)", "sets": 4, "reps": "15-20", "rpe": rpe_val, "rest": rest_val, "default_wt": 100},
+                    {"series": "C1", "exercise": "Tricep Straight-Bar Pushdown", "sets": 3, "reps": "20-25", "rpe": rpe_val, "rest": rest_val, "default_wt": 35}
+                ]
+            elif "Day 6" in day_str:
+                return [
+                    {"series": "C1", "exercise": "Dual-Cable Bicep Curl", "sets": 4, "reps": "15-20", "rpe": rpe_val, "rest": rest_val, "default_wt": 25},
+                    {"series": "C2", "exercise": "Overhead Rope Tricep Extension", "sets": 4, "reps": "15-20", "rpe": rpe_val, "rest": rest_val, "default_wt": 30},
+                    {"series": "C3", "exercise": "Standing Calf Raise", "sets": 4, "reps": "20-25", "rpe": rpe_val, "rest": rest_val, "default_wt": 120}
+                ]
 
-            with col_sets:
-                st.write("**Mark Completed Sets:**")
-                set_cols = st.columns(ex['sets'])
-                for s in range(1, ex['sets'] + 1):
-                    set_key = f"{workout_key_prefix}_ex{idx}_set{s}"
-                    with set_cols[s - 1]:
-                        st.checkbox(f"Set {s}", key=set_key)
+        # Default fallback
+        return [
+            {"series": "A-Series", "exercise": "Primary Compound Movement", "sets": 4, "reps": "8-10", "rpe": "8", "rest": "2 min", "default_wt": 100},
+            {"series": "B1", "exercise": "Secondary Compound Movement", "sets": 3, "reps": "10-12", "rpe": "8", "rest": "90 sec", "default_wt": 80}
+        ]
 
-    st.markdown("---")
-    st.subheader("📝 Workout Session Completion Log")
-    session_notes = st.text_area("Session Notes (Pump Quality, Joint Health, Energy Level):", placeholder="e.g. Great chest pump on Incline Bench, felt strong on 185 lbs.")
-    
-    # Load existing logs from Excel/CSV if available
-    csv_file = "chase_the_lion_workout_history.csv"
-    excel_file = "chase_the_lion_workout_history.xlsx"
+    current_workout = get_workout_for_week(week, day)
 
-    if st.button("💾 Save Completed Workout Session"):
-        new_log = {
-            "Date": datetime.date.today().strftime("%Y-%m-%d"),
-            "Phase": phase,
-            "Week": week,
-            "Day": day,
-            "Sets Completed": f"{completed_sets_count}/{total_target_sets}",
-            "Progress": f"{int((completed_sets_count / total_target_sets if total_target_sets > 0 else 1.0) * 100)}%",
-            "Notes": session_notes
-        }
-        
-        # 1. Update Session State
-        st.session_state.workout_logs.append(new_log)
-        
-        # 2. Save to Permanent Local CSV & Excel files
-        df_new = pd.DataFrame([new_log])
-        if os.path.exists(csv_file):
-            df_new.to_csv(csv_file, mode='a', header=False, index=False)
-        else:
-            df_new.to_csv(csv_file, mode='w', header=True, index=False)
-            
-        try:
-            if os.path.exists(excel_file):
-                df_existing = pd.read_excel(excel_file)
-                df_combined = pd.concat([df_existing, df_new], ignore_index=True)
-                df_combined.to_excel(excel_file, index=False)
-            else:
-                df_new.to_excel(excel_file, index=False)
-        except Exception as e:
-            pass
-            
-        # 3. Post directly to Google Sheets Webhook if URL configured
-        gs_url = st.session_state.get("gsheet_url", "").strip()
-        gs_synced = False
-        if gs_url:
-            try:
-                payload = json.dumps({
-                    "Date": new_log["Date"],
-                    "Phase": new_log["Phase"],
-                    "Week": new_log["Week"],
-                    "Day": new_log["Day"],
-                    "SetsCompleted": new_log["Sets Completed"],
-                    "Progress": new_log["Progress"],
-                    "Notes": new_log["Notes"]
-                }).encode('utf-8')
-                req = urllib.request.Request(gs_url, data=payload, headers={'Content-Type': 'application/json'})
-                with urllib.request.urlopen(req, timeout=5) as response:
-                    if response.status == 200:
-                        gs_synced = True
-            except Exception as e:
-                st.warning(f"Note: Saved locally, but Google Sheets Webhook sync had an issue: {e}")
-        
-        if gs_synced:
-            st.success(f"✅ Workout logged locally AND synced to your Google Sheet! ({completed_sets_count}/{total_target_sets} sets completed)")
-        else:
-            st.success(f"✅ Workout logged permanently to Excel & CSV! ({completed_sets_count}/{total_target_sets} sets completed)")
-
-    # Display History Table & Download/Export Buttons
-    if os.path.exists(csv_file):
-        df_history = pd.read_csv(csv_file)
-        st.subheader("📜 Permanent Workout History (Saved Locally & Cloud)")
-        st.dataframe(df_history, use_container_width=True)
-        
-        csv_data = df_history.to_csv(index=False).encode('utf-8')
-        st.download_button("📥 Download History CSV for Google Drive", data=csv_data, file_name="chase_the_lion_workout_history.csv", mime="text/csv")
-
-        if st.button('🗑️ Clear Local Workout History'):
-            if os.path.exists(csv_file):
-                os.remove(csv_file)
-            if os.path.exists(excel_file):
-                os.remove(excel_file)
-            st.session_state.workout_logs = []
-            st.success('✅ Local workout history cleared!')
-            st.rerun()
-
-    elif st.session_state.workout_logs:
-        st.subheader("📜 Recent Workout History")
-        st.dataframe(pd.DataFrame(st.session_state.workout_logs), use_container_width=True)
-
-    if st.session_state.workout_logs:
-        st.subheader("📜 Recent Workout History")
-        st.dataframe(pd.DataFrame(st.session_state.workout_logs), use_container_width=True)
-
-# MODULE 3: NUTRITION & MACRO ENGINE (MEAL IDEAS & CHECKBOXES + GROCERY STORE CHECKLIST)
 elif menu == "Nutrition & Macro Engine":
     st.header("Nutrition & Macro Engine — Meal Tracker & Grocery List")
     
