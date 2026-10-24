@@ -680,6 +680,147 @@ elif menu == "12-Week Lift Engine (Real-Time Tracker)":
 
     current_workout = get_workout_for_week(week, day)
 
+    total_target_sets = sum([ex["sets"] for ex in current_workout])
+    completed_sets_count = 0
+    workout_key_prefix = f"{phase}_{week}_{day}"
+
+    for idx, ex in enumerate(current_workout):
+        for s in range(1, ex["sets"] + 1):
+            set_key = f"{workout_key_prefix}_ex{idx}_set{s}"
+            if st.session_state.get(set_key, False):
+                completed_sets_count += 1
+
+    st.subheader("⏱️ Real-Time Workout Progress")
+    p_col1, p_col2 = st.columns([3, 1])
+    with p_col1:
+        progress_pct = completed_sets_count / total_target_sets if total_target_sets > 0 else 1.0
+        st.progress(progress_pct)
+    with p_col2:
+        st.metric("Sets Completed", f"{completed_sets_count} / {total_target_sets}", f"{int(progress_pct * 100)}%")
+
+    st.markdown("---")
+    st.subheader("💪 Exercise & Set Tracker Matrix")
+
+    for idx, ex in enumerate(current_workout):
+        with st.expander(f"📌 {ex['series']} | {ex['exercise']} ({ex['sets']} Sets x {ex['reps']} Reps @ RPE {ex['rpe']})", expanded=True):
+            col_info, col_input, col_sets = st.columns([2, 1, 3])
+            
+            with col_info:
+                st.write(f"**Target Reps:** {ex['reps']}")
+                st.write(f"**Target RPE:** {ex['rpe']}")
+                st.write(f"**Recommended Rest:** {ex['rest']}")
+            
+            with col_input:
+                wt_key = f"{workout_key_prefix}_ex{idx}_wt"
+                weight_used = st.number_input(f"Weight Used (lbs)", value=ex['default_wt'], step=5, key=wt_key)
+                rpe_key = f"{workout_key_prefix}_ex{idx}_rpe_actual"
+                
+                # Safe RPE numeric parsing
+                rpe_default_val = 8.0
+                try:
+                    rpe_clean = str(ex['rpe']).split('-')[0].strip()
+                    rpe_default_val = float(rpe_clean)
+                except Exception:
+                    rpe_default_val = 8.0
+                    
+                actual_rpe = st.number_input("Actual RPE", value=rpe_default_val, min_value=1.0, max_value=10.0, step=0.5, key=rpe_key)
+
+            with col_sets:
+                st.write("**Mark Completed Sets:**")
+                set_cols = st.columns(ex['sets'])
+                for s in range(1, ex['sets'] + 1):
+                    set_key = f"{workout_key_prefix}_ex{idx}_set{s}"
+                    with set_cols[s - 1]:
+                        st.checkbox(f"Set {s}", key=set_key)
+
+    st.markdown("---")
+    st.subheader("📝 Workout Session Completion Log")
+    session_notes = st.text_area("Session Notes (Pump Quality, Joint Health, Energy Level):", placeholder="e.g. Great chest pump on Incline Bench, felt strong on 185 lbs.")
+    
+    # Load existing logs from Excel/CSV if available
+    csv_file = "chase_the_lion_workout_history.csv"
+    excel_file = "chase_the_lion_workout_history.xlsx"
+
+    if st.button("💾 Save Completed Workout Session"):
+        new_log = {
+            "Date": datetime.date.today().strftime("%Y-%m-%d"),
+            "Phase": phase,
+            "Week": week,
+            "Day": day,
+            "Sets Completed": f"{completed_sets_count}/{total_target_sets}",
+            "Progress": f"{int((completed_sets_count / total_target_sets if total_target_sets > 0 else 1.0) * 100)}%",
+            "Notes": session_notes
+        }
+        
+        # 1. Update Session State
+        st.session_state.workout_logs.append(new_log)
+        
+        # 2. Save to Permanent Local CSV & Excel files
+        df_new = pd.DataFrame([new_log])
+        if os.path.exists(csv_file):
+            df_new.to_csv(csv_file, mode='a', header=False, index=False)
+        else:
+            df_new.to_csv(csv_file, mode='w', header=True, index=False)
+            
+        try:
+            if os.path.exists(excel_file):
+                df_existing = pd.read_excel(excel_file)
+                df_combined = pd.concat([df_existing, df_new], ignore_index=True)
+                df_combined.to_excel(excel_file, index=False)
+            else:
+                df_new.to_excel(excel_file, index=False)
+        except Exception as e:
+            pass
+            
+        # 3. Post directly to Google Sheets Webhook if URL configured
+        gs_url = st.session_state.get("gsheet_url", "").strip()
+        gs_synced = False
+        if gs_url:
+            try:
+                payload = json.dumps({
+                    "Date": new_log["Date"],
+                    "Phase": new_log["Phase"],
+                    "Week": new_log["Week"],
+                    "Day": new_log["Day"],
+                    "SetsCompleted": new_log["Sets Completed"],
+                    "Progress": new_log["Progress"],
+                    "Notes": new_log["Notes"]
+                }).encode('utf-8')
+                req = urllib.request.Request(gs_url, data=payload, headers={'Content-Type': 'application/json'})
+                with urllib.request.urlopen(req, timeout=5) as response:
+                    if response.status == 200:
+                        gs_synced = True
+            except Exception as e:
+                st.warning(f"Note: Saved locally, but Google Sheets Webhook sync had an issue: {e}")
+        
+        if gs_synced:
+            st.success(f"✅ Workout logged locally AND synced to your Google Sheet! ({completed_sets_count}/{total_target_sets} sets completed)")
+        else:
+            st.success(f"✅ Workout logged permanently to Excel & CSV! ({completed_sets_count}/{total_target_sets} sets completed)")
+
+    # Display History Table & Download/Export Buttons
+    if os.path.exists(csv_file):
+        df_history = pd.read_csv(csv_file)
+        st.subheader("📜 Permanent Workout History (Saved Locally & Cloud)")
+        st.dataframe(df_history, use_container_width=True)
+        
+        csv_data = df_history.to_csv(index=False).encode('utf-8')
+        st.download_button("📥 Download History CSV for Google Drive", data=csv_data, file_name="chase_the_lion_workout_history.csv", mime="text/csv")
+
+        if st.button('🗑️ Clear Local Workout History'):
+            if os.path.exists(csv_file):
+                os.remove(csv_file)
+            if os.path.exists(excel_file):
+                os.remove(excel_file)
+            st.session_state.workout_logs = []
+            st.success('✅ Local workout history cleared!')
+            st.rerun()
+
+    elif st.session_state.workout_logs:
+        st.subheader("📜 Recent Workout History")
+        st.dataframe(pd.DataFrame(st.session_state.workout_logs), use_container_width=True)
+
+
 elif menu == "Nutrition & Macro Engine":
     st.header("Nutrition & Macro Engine — Meal Tracker & Grocery List")
     
@@ -725,152 +866,4 @@ elif menu == "Nutrition & Macro Engine":
         {
             "id": "meal2",
             "name": "Meal 2: Post-Workout Recovery Breakfast (6:30 AM)",
-            "macros": "~600 kcal | 45g P | 70g C | 14g F",
-            "ideas": [
-                "🍳 **Option A:** 1 cup Liquid Egg Whites + 2 Whole Eggs + 1 cup Cooked Jasmine Rice + Baby Spinach",
-                "🥞 **Option B:** Protein Oatmeal Bowl: 3/4 cup Oats + 1.5 scoops Whey + 1/2 cup Egg Whites scrambled in",
-                "🥩 **Option C:** 4 oz Lean Ground Beef (93/7) + 1 cup Jasmine Rice + 2 Soft-Boiled Eggs"
-            ]
-        },
-        {
-            "id": "meal3",
-            "name": "Meal 3: High-Performance Fuel Lunch (12:30 PM)",
-            "macros": "~650 kcal | 45g P | 75g C | 18g F",
-            "ideas": [
-                "🍗 **Option A:** 6 oz Grilled Chicken Breast + 1.25 cups Jasmine Rice + 1/2 Avocado + Steamed Broccoli",
-                "🥩 **Option B:** 6 oz Top Sirloin Steak + 200g Baked Sweet Potato + Asparagus with Olive Oil",
-                "🐟 **Option C:** 6 oz Wild Salmon / Tuna + 1.25 cups Brown Rice + Cucumber & Mixed Greens"
-            ]
-        },
-        {
-            "id": "meal4",
-            "name": "Meal 4: Anabolic Dinner (6:30 PM)",
-            "macros": "~650 kcal | 50g P | 70g C | 18g F",
-            "ideas": [
-                "🥩 **Option A:** 6 oz Lean Ground Sirloin / Beef + 200g Roasted Sweet Potato + Roasted Zucchini",
-                "🍗 **Option B:** 7 oz Baked Chicken Breast + 1.25 cups Jasmine Rice + 1 tbsp Extra Virgin Olive Oil drizzle",
-                "🌮 **Option C:** Ground Turkey Bowl: 6 oz Ground Turkey + 1 cup White Rice + Salsa + 1/2 Avocado"
-            ]
-        },
-        {
-            "id": "meal5",
-            "name": "Meal 5: Nighttime Recovery Fuel (9:00 PM)",
-            "macros": "~400 kcal | 30g P | 25g C | 18g F",
-            "ideas": [
-                "🥣 **Option A:** 1 cup Non-Fat Plain Greek Yogurt + 2 tbsp Natural Peanut Butter + Cinnamon",
-                "🥛 **Option B:** Casein / Whey Protein Shake + 1 oz Raw Almonds or Walnuts",
-                "🍳 **Option C:** 1 cup Egg Whites + 1 Whole Egg Omelet + 1 Slice Whole Grain Toast"
-            ]
-        }
-    ]
-
-    today_str = datetime.date.today().strftime("%Y-%m-%d")
-    meals_eaten = 0
-
-    for m in meals_config:
-        meal_key = f"meal_check_{today_str}_{m['id']}"
-        
-        with st.expander(f"📌 {m['name']} ({m['macros']})", expanded=True):
-            st.markdown("**Suggested Meal Ideas:**")
-            for idea in m["ideas"]:
-                st.markdown(f"- {idea}")
-            
-            st.markdown("<br>", unsafe_allow_html=True)
-            eaten = st.checkbox(f"✅ I ate {m['name']}", key=meal_key)
-            if eaten:
-                meals_eaten += 1
-
-    st.markdown("---")
-    st.subheader("📈 Daily Nutrition Progress")
-    m_pct = meals_eaten / len(meals_config)
-    st.write(f"**Meals Consumed Today:** {meals_eaten} / {len(meals_config)} ({int(m_pct * 100)}%)")
-    st.progress(m_pct)
-
-    st.markdown("---")
-
-    # SUGGESTED GROCERY LIST BY MACRO CATEGORY WITH STORE CHECKBOXES
-    st.subheader("🛒 Master Grocery List (Organized by Macro Category)")
-    st.caption("Check off items in real time while shopping at the grocery store!")
-
-    grocery_items = {
-        "🥩 Protein Sources": [
-            "Boneless Skinless Chicken Breast (3-5 lbs)",
-            "Top Sirloin / Lean Ground Beef 93/7 (3-4 lbs)",
-            "Wild Salmon / Tuna Steaks (2 lbs)",
-            "Liquid Egg Whites (3 Cartons / 48 fl oz)",
-            "Whole Pasture-Raised Eggs (2 Cartons)",
-            "Non-Fat Plain Greek Yogurt (2 Large Tubs)",
-            "Whey Protein Isolate Powder (1 Tub)"
-        ],
-        "🍚 Carbohydrate Sources": [
-            "Jasmine or Basmati Rice (1 Large Bag / 5 lbs)",
-            "Old Fashioned Rolled Oats (1 Container / 42 oz)",
-            "Sweet Potatoes / Yukon Gold Potatoes (1 Bag / 5 lbs)",
-            "Organic Bananas & Frozen Mixed Berries",
-            "Plain Rice Cakes (2 Packs)",
-            "Ezekiel Whole Grain Bread (1 Loaf)"
-        ],
-        "🥑 Healthy Fat Sources": [
-            "Fresh Avocados (1 Bag / 5-6 count)",
-            "Extra Virgin Olive Oil (1 Bottle)",
-            "Raw Almonds & Walnuts (1 Bag)",
-            "Natural Peanut Butter / Almond Butter (1 Jar)"
-        ],
-        "🥦 Produce, Micros & Staples": [
-            "Fresh Organic Baby Spinach & Kale (2 Large Tubs)",
-            "Broccoli Crown & Asparagus Spears (2 lbs)",
-            "Unsweetened Almond Milk (2 Cartons)",
-            "Pink Himalayan Sea Salt & Black Pepper",
-            "Cinnamon & Unsweetened Cocoa Powder"
-        ]
-    }
-
-    # Track total checkable items
-    total_grocery_count = sum(len(items) for items in grocery_items.values())
-    checked_grocery_count = 0
-
-    # Count checked items
-    for category, items in grocery_items.items():
-        for item in items:
-            g_key = f"grocery_{category}_{item}"
-            if st.session_state.get(g_key, False):
-                checked_grocery_count += 1
-
-    # Grocery Shopping Progress Bar
-    g_pct = checked_grocery_count / total_grocery_count if total_grocery_count > 0 else 0
-    st.write(f"**Grocery Checklist Progress:** {checked_grocery_count} / {total_grocery_count} Items In Cart ({int(g_pct * 100)}%)")
-    st.progress(g_pct)
-
-    # Render Macro Category Checkboxes
-    g_col1, g_col2 = st.columns(2)
-    
-    categories = list(grocery_items.keys())
-    
-    with g_col1:
-        for cat in categories[:2]:
-            st.markdown(f"#### {cat}")
-            for item in grocery_items[cat]:
-                g_key = f"grocery_{cat}_{item}"
-                st.checkbox(item, key=g_key)
-            st.markdown("<br>", unsafe_allow_html=True)
-
-    with g_col2:
-        for cat in categories[2:]:
-            st.markdown(f"#### {cat}")
-            for item in grocery_items[cat]:
-                g_key = f"grocery_{cat}_{item}"
-                st.checkbox(item, key=g_key)
-            st.markdown("<br>", unsafe_allow_html=True)
-
-# MODULE 4: SUNDAY REVIEW & ACCOUNTABILITY
-elif menu == "Sunday Review & Accountability":
-    st.header("Sunday Review & Weekly Check-In")
-    st.slider("Rate This Week's Discipline", 1, 5, 5)
-    st.text_area("What were your biggest accomplishments this week?")
-    st.text_area("3 Things You Are Grateful For:")
-    st.text_area("A-Series & Joint/Fatigue Notes:")
-    if st.button("Submit Sunday Check-In"):
-        st.success("✅ Sunday Check-In Saved!")
-
-st.markdown("---")
-st.caption("Generated for Gemini Notebook — TXP Chase The Lion System v10.0")
+            "macros": "
