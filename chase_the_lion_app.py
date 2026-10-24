@@ -194,7 +194,8 @@ menu = st.sidebar.radio("Go to Module:", [
     "12-Week Lift Engine (Real-Time Tracker)",
     "Nutrition & Macro Engine",
     "Peptide Protocol & Tracker",
-    "Sunday Review & Accountability"
+    "Daily Review & Reflection Log",
+    "Google Calendar & Daily Schedule"
 ])
 
 # MODULE 1: DAILY DISCIPLINE DASHBOARD
@@ -1367,14 +1368,173 @@ elif menu == "Peptide Protocol & Tracker":
         * **Carb & Fat Avoidance:** Elevated blood glucose and insulin levels blunt growth hormone pulse release, so avoid eating carbs or fats directly before night administration.
         """)
 
-elif menu == "Sunday Review & Accountability":
-    st.header("Sunday Review & Weekly Check-In")
-    st.slider("Rate This Week's Discipline", 1, 5, 5)
-    st.text_area("What were your biggest accomplishments this week?")
-    st.text_area("3 Things You Are Grateful For:")
-    st.text_area("A-Series & Joint/Fatigue Notes:")
-    if st.button("Submit Sunday Check-In"):
-        st.success("✅ Sunday Check-In Saved!")
+elif menu == "Daily Review & Reflection Log":
+    st.header("📖 Daily Review & Evening Reflection Log")
+    st.caption("End-of-day scorecard, gratitude, victories, physical recovery notes, and spiritual reflection.")
+    
+    rev_date = st.date_input("Reflection Date", datetime.date.today(), key="rev_log_date")
+    rev_day = rev_date.strftime("%A")
+    
+    col_r1, col_r2 = st.columns(2)
+    with col_r1:
+        rating = st.slider("Rate Today's Overall Discipline & Execution", 1, 5, 5, help="1 = Off Track | 3 = Solid Effort | 5 = Lionhearted Dominance 🦁")
+        wins = st.text_area("Today's Victories & Biggest Accomplishments:", placeholder="e.g. Completed morning lift, stayed 100% on macros, crushed my work focus blocks.", height=100)
+        gratitude = st.text_area("3 Things You Are Grateful For Today:", placeholder="1. Faith & Family\n2. Health & Strength\n3. Daily Growth", height=100)
+        
+    with col_r2:
+        physical_notes = st.text_area("Physical Recovery, Joint & Fatigue Notes:", placeholder="e.g. Knees felt good on squats, lower back slightly fatigued, sleep quality was 8/10.", height=100)
+        spiritual_notes = st.text_area("Spiritual Reflection & Devotional Takeaway:", placeholder="e.g. Proverbs 28:1 — Focus on bold, courageous action in leadership and faith.", height=100)
+
+    st.markdown("---")
+    
+    rev_csv = "chase_the_lion_daily_review_history.csv"
+    rev_excel = "chase_the_lion_daily_review_history.xlsx"
+
+    if st.button("💾 Save Daily Reflection Session"):
+        rev_log = {
+            "Date": rev_date.strftime("%Y-%m-%d"),
+            "Day": rev_day,
+            "Discipline Rating": f"{rating} / 5 🦁",
+            "Victories": wins,
+            "Gratitude": gratitude,
+            "Physical Notes": physical_notes,
+            "Spiritual Notes": spiritual_notes
+        }
+        
+        df_rev = pd.DataFrame([rev_log])
+        if os.path.exists(rev_csv):
+            df_rev.to_csv(rev_csv, mode="a", header=False, index=False)
+        else:
+            df_rev.to_csv(rev_csv, mode="w", header=True, index=False)
+            
+        try:
+            if os.path.exists(rev_excel):
+                df_ex_r = pd.read_excel(rev_excel)
+                df_comb_r = pd.concat([df_ex_r, df_rev], ignore_index=True)
+                df_comb_r.to_excel(rev_excel, index=False)
+            else:
+                df_rev.to_excel(rev_excel, index=False)
+        except Exception:
+            pass
+            
+        gs_url = st.session_state.get("gsheet_url", "").strip()
+        if gs_url:
+            try:
+                payload = json.dumps(rev_log).encode("utf-8")
+                req = urllib.request.Request(gs_url, data=payload, headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=5) as resp:
+                    pass
+            except Exception:
+                pass
+        
+        st.success("✅ Daily reflection logged successfully to permanent history!")
+
+    if os.path.exists(rev_csv):
+        df_rev_hist = pd.read_csv(rev_csv)
+        st.subheader("📜 Permanent Daily Reflection History")
+        st.dataframe(df_rev_hist, use_container_width=True)
+        
+        csv_rev_data = df_rev_hist.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Download Daily Reflection CSV", data=csv_rev_data, file_name="chase_the_lion_daily_review_history.csv", mime="text/csv")
+
+elif menu == "Google Calendar & Daily Schedule":
+    st.header("📅 Google Calendar & Master Daily Schedule")
+    st.caption("Integrate your Google Calendar and follow your high-performance daily time-blocking routine.")
+
+    tab_gcal1, tab_gcal2 = st.tabs(["📅 Live Google Calendar", "⏰ Master Time-Blocking Blueprint"])
+
+    with tab_gcal1:
+        st.subheader("Google Calendar Live Embed")
+        
+        gcal_file = "gcal_config.json"
+        default_gcal_url = ""
+        if os.path.exists(gcal_file):
+            try:
+                with open(gcal_file, "r") as f:
+                    gcal_data = json.load(f)
+                    default_gcal_url = gcal_data.get("gcal_url", "")
+            except Exception:
+                pass
+
+        st.info("""💡 **How to embed your Google Calendar:**
+1. Open **Google Calendar** in your web browser.
+2. Click the gear icon ⚙️ > **Settings** > Click your calendar under 'Settings for my calendars'.
+3. Scroll down to **'Integrate calendar'** and copy the **Public URL** or **Embed Code** (URL inside src='...').
+4. Paste your calendar link below and click **Save Calendar Link**!""")
+
+        gcal_input_url = st.text_input("Enter Google Calendar Embed URL or Public Link:", value=default_gcal_url, placeholder="e.g. https://calendar.google.com/calendar/embed?src=your_email%40gmail.com&ctz=America%2FChicago")
+        
+        if st.button("💾 Save Google Calendar Link"):
+            try:
+                with open(gcal_file, "w") as f:
+                    json.dump({"gcal_url": gcal_input_url.strip()}, f)
+                st.session_state["gcal_url"] = gcal_input_url.strip()
+                st.success("✅ Google Calendar URL saved permanently!")
+                st.rerun()
+            except Exception as e:
+                st.error(f"Error saving Google Calendar URL: {e}")
+
+        active_gcal_url = gcal_input_url.strip() or st.session_state.get("gcal_url", "")
+
+        if active_gcal_url:
+            st.markdown("---")
+            st.subheader("📆 Your Live Calendar View")
+            if "src=" in active_gcal_url:
+                try:
+                    start_idx = active_gcal_url.find("src=") + 5
+                    quote_char = active_gcal_url[start_idx - 1]
+                    if quote_char in ['"', "'"]:
+                        end_idx = active_gcal_url.find(quote_char, start_idx)
+                        if end_idx != -1:
+                            active_gcal_url = active_gcal_url[start_idx:end_idx]
+                except Exception:
+                    pass
+
+            st.components.v1.iframe(active_gcal_url, height=650, scrolling=True)
+        else:
+            st.warning("No Google Calendar link set yet. Paste your calendar link above to embed your live schedule directly here!")
+
+        st.markdown("---")
+        col_gcal_btn1, col_gcal_btn2 = st.columns(2)
+        with col_gcal_btn1:
+            st.markdown("[🔗 Open Google Calendar in New Tab](https://calendar.google.com)", unsafe_allow_html=True)
+        with col_gcal_btn2:
+            st.markdown("[➕ Quick Add Event to Google Calendar](https://calendar.google.com/calendar/render?action=TEMPLATE)", unsafe_allow_html=True)
+
+    with tab_gcal2:
+        st.subheader("⏰ High-Performance Daily Time-Blocking Blueprint")
+        st.write("Mark off each time block as you move through your daily schedule:")
+
+        sched_date = st.date_input("Schedule Date", datetime.date.today(), key="sched_date_picker")
+        sched_key_prefix = f"sched_{sched_date.strftime('%Y-%m-%d')}"
+
+        time_blocks = [
+            {"time": "4:15 AM", "title": "Wake Up, Hydrate & Pre-Workout Fuel 🥣", "desc": "Drink 16-20 oz water + pre-workout meal (Oats / Whey / Banana)."},
+            {"time": "5:00 AM", "title": "12-Week Lift Session 🏋️‍♂️", "desc": "Execute today's scheduled Lift Engine workout with high intensity."},
+            {"time": "6:30 AM", "title": "Post-Workout Recovery Breakfast & Devotional 🍳📖", "desc": "High-protein meal + Personal Devotional & Bible Plan reading."},
+            {"time": "8:00 AM", "title": "High-Focus Deep Work Block ⚡", "desc": "Peak cognitive energy window — attack priority work goals."},
+            {"time": "12:30 PM", "title": "High-Performance Fuel Lunch & Hydration 🍗", "desc": "Lean protein + complex carbs + continue 1-gallon water goal."},
+            {"time": "5:00 PM", "title": "Evening Mobility, Active Recovery & Family Time 🏃‍♂️", "desc": "Zone 2 walk, stretching, joint health & family connection."},
+            {"time": "6:30 PM", "title": "Anabolic Dinner 🥩", "desc": "Nutrient-dense dinner supporting muscle synthesis."},
+            {"time": "9:30 PM", "title": "Peptide Protocol & Night Wind Down 💤", "desc": "CJC w/o DAC administration on empty stomach + 7.5 hrs sleep focus."}
+        ]
+
+        completed_blocks = 0
+        for idx, block in enumerate(time_blocks):
+            col_tb1, col_tb2 = st.columns([1, 4])
+            block_key = f"{sched_key_prefix}_block_{idx}"
+            with col_tb1:
+                st.markdown(f"### `{block['time']}`")
+            with col_tb2:
+                checked = st.checkbox(f"**{block['title']}**\n\n_{block['desc']}_", key=block_key)
+                if checked:
+                    completed_blocks += 1
+
+        st.markdown("---")
+        st.subheader("📊 Schedule Execution Scorecard")
+        sched_pct = completed_blocks / len(time_blocks)
+        st.progress(sched_pct)
+        st.write(f"**Daily Schedule Score:** {completed_blocks} / {len(time_blocks)} Blocks Completed ({int(sched_pct * 100)}%)")
 
 st.markdown("---")
 st.caption("Generated for Gemini Notebook — TXP Chase The Lion System v10.0")
