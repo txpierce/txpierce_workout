@@ -866,4 +866,152 @@ elif menu == "Nutrition & Macro Engine":
         {
             "id": "meal2",
             "name": "Meal 2: Post-Workout Recovery Breakfast (6:30 AM)",
-            "macros": "
+            "macros": "~600 kcal | 45g P | 70g C | 14g F",
+            "ideas": [
+                "🍳 **Option A:** 1 cup Liquid Egg Whites + 2 Whole Eggs + 1 cup Cooked Jasmine Rice + Baby Spinach",
+                "🥞 **Option B:** Protein Oatmeal Bowl: 3/4 cup Oats + 1.5 scoops Whey + 1/2 cup Egg Whites scrambled in",
+                "🥩 **Option C:** 4 oz Lean Ground Beef (93/7) + 1 cup Jasmine Rice + 2 Soft-Boiled Eggs"
+            ]
+        },
+        {
+            "id": "meal3",
+            "name": "Meal 3: High-Performance Fuel Lunch (12:30 PM)",
+            "macros": "~650 kcal | 45g P | 75g C | 18g F",
+            "ideas": [
+                "🍗 **Option A:** 6 oz Grilled Chicken Breast + 1.25 cups Jasmine Rice + 1/2 Avocado + Steamed Broccoli",
+                "🥩 **Option B:** 6 oz Top Sirloin Steak + 200g Baked Sweet Potato + Asparagus with Olive Oil",
+                "🐟 **Option C:** 6 oz Wild Salmon / Tuna + 1.25 cups Brown Rice + Cucumber & Mixed Greens"
+            ]
+        },
+        {
+            "id": "meal4",
+            "name": "Meal 4: Anabolic Dinner (6:30 PM)",
+            "macros": "~650 kcal | 50g P | 70g C | 18g F",
+            "ideas": [
+                "🥩 **Option A:** 6 oz Lean Ground Sirloin / Beef + 200g Roasted Sweet Potato + Roasted Zucchini",
+                "🍗 **Option B:** 7 oz Baked Chicken Breast + 1.25 cups Jasmine Rice + 1 tbsp Extra Virgin Olive Oil drizzle",
+                "🌮 **Option C:** Ground Turkey Bowl: 6 oz Ground Turkey + 1 cup White Rice + Salsa + 1/2 Avocado"
+            ]
+        },
+        {
+            "id": "meal5",
+            "name": "Meal 5: Nighttime Recovery Fuel (9:00 PM)",
+            "macros": "~400 kcal | 30g P | 25g C | 18g F",
+            "ideas": [
+                "🥣 **Option A:** 1 cup Non-Fat Plain Greek Yogurt + 2 tbsp Natural Peanut Butter + Cinnamon",
+                "🥛 **Option B:** Casein / Whey Protein Shake + 1 oz Raw Almonds or Walnuts",
+                "🍳 **Option C:** 1 cup Egg Whites + 1 Whole Egg Omelet + 1 Slice Whole Grain Toast"
+            ]
+        }
+    ]
+
+    today_str = datetime.date.today().strftime("%Y-%m-%d")
+    meals_eaten = 0
+
+    for m in meals_config:
+        meal_key = f"meal_check_{today_str}_{m['id']}"
+        
+        with st.expander(f"📌 {m['name']} ({m['macros']})", expanded=True):
+            st.markdown("**Suggested Meal Ideas:**")
+            for idea in m["ideas"]:
+                st.markdown(f"- {idea}")
+            
+            st.markdown("<br>", unsafe_allow_html=True)
+            eaten = st.checkbox(f"✅ I ate {m['name']}", key=meal_key)
+            if eaten:
+                meals_eaten += 1
+
+    st.markdown("---")
+    st.subheader("📈 Daily Nutrition Progress")
+    m_pct = meals_eaten / len(meals_config)
+    st.write(f"**Meals Consumed Today:** {meals_eaten} / {len(meals_config)} ({int(m_pct * 100)}%)")
+    st.progress(m_pct)
+
+    st.markdown("---")
+
+    # SUGGESTED GROCERY LIST BY MACRO CATEGORY WITH STORE CHECKBOXES
+    st.subheader("🛒 Master Grocery List (Organized by Macro Category)")
+    st.caption("Check off items in real time while shopping at the grocery store!")
+
+    grocery_items = {
+        "🥩 Protein Sources": [
+            "Boneless Skinless Chicken Breast (3-5 lbs)",
+            "Top Sirloin / Lean Ground Beef 93/7 (3-4 lbs)",
+            "Wild Salmon / Tuna Steaks (2 lbs)",
+            "Liquid Egg Whites (3 Cartons / 48 fl oz)",
+            "Whole Pasture-Raised Eggs (2 Cartons)",
+            "Non-Fat Plain Greek Yogurt (2 Large Tubs)",
+            "Whey Protein Isolate Powder (1 Tub)"
+        ],
+        "🍚 Carbohydrate Sources": [
+            "Jasmine or Basmati Rice (1 Large Bag / 5 lbs)",
+            "Old Fashioned Rolled Oats (1 Container / 42 oz)",
+            "Sweet Potatoes / Yukon Gold Potatoes (1 Bag / 5 lbs)",
+            "Organic Bananas & Frozen Mixed Berries",
+            "Plain Rice Cakes (2 Packs)",
+            "Ezekiel Whole Grain Bread (1 Loaf)"
+        ],
+        "🥑 Healthy Fat Sources": [
+            "Fresh Avocados (1 Bag / 5-6 count)",
+            "Extra Virgin Olive Oil (1 Bottle)",
+            "Raw Almonds & Walnuts (1 Bag)",
+            "Natural Peanut Butter / Almond Butter (1 Jar)"
+        ],
+        "🥦 Produce, Micros & Staples": [
+            "Fresh Organic Baby Spinach & Kale (2 Large Tubs)",
+            "Broccoli Crown & Asparagus Spears (2 lbs)",
+            "Unsweetened Almond Milk (2 Cartons)",
+            "Pink Himalayan Sea Salt & Black Pepper",
+            "Cinnamon & Unsweetened Cocoa Powder"
+        ]
+    }
+
+    # Track total checkable items
+    total_grocery_count = sum(len(items) for items in grocery_items.values())
+    checked_grocery_count = 0
+
+    # Count checked items
+    for category, items in grocery_items.items():
+        for item in items:
+            g_key = f"grocery_{category}_{item}"
+            if st.session_state.get(g_key, False):
+                checked_grocery_count += 1
+
+    # Grocery Shopping Progress Bar
+    g_pct = checked_grocery_count / total_grocery_count if total_grocery_count > 0 else 0
+    st.write(f"**Grocery Checklist Progress:** {checked_grocery_count} / {total_grocery_count} Items In Cart ({int(g_pct * 100)}%)")
+    st.progress(g_pct)
+
+    # Render Macro Category Checkboxes
+    g_col1, g_col2 = st.columns(2)
+    
+    categories = list(grocery_items.keys())
+    
+    with g_col1:
+        for cat in categories[:2]:
+            st.markdown(f"#### {cat}")
+            for item in grocery_items[cat]:
+                g_key = f"grocery_{cat}_{item}"
+                st.checkbox(item, key=g_key)
+            st.markdown("<br>", unsafe_allow_html=True)
+
+    with g_col2:
+        for cat in categories[2:]:
+            st.markdown(f"#### {cat}")
+            for item in grocery_items[cat]:
+                g_key = f"grocery_{cat}_{item}"
+                st.checkbox(item, key=g_key)
+            st.markdown("<br>", unsafe_allow_html=True)
+
+# MODULE 4: SUNDAY REVIEW & ACCOUNTABILITY
+elif menu == "Sunday Review & Accountability":
+    st.header("Sunday Review & Weekly Check-In")
+    st.slider("Rate This Week's Discipline", 1, 5, 5)
+    st.text_area("What were your biggest accomplishments this week?")
+    st.text_area("3 Things You Are Grateful For:")
+    st.text_area("A-Series & Joint/Fatigue Notes:")
+    if st.button("Submit Sunday Check-In"):
+        st.success("✅ Sunday Check-In Saved!")
+
+st.markdown("---")
+st.caption("Generated for Gemini Notebook — TXP Chase The Lion System v10.0")
