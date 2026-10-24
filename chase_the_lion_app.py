@@ -1174,12 +1174,12 @@ elif menu == "Peptide Protocol & Tracker":
             bac_reta = st.number_input("BAC Water Added (mL)", min_value=0.5, max_value=5.0, value=2.0, step=0.5, key="reta_bac")
             conc_reta = 10.0 / bac_reta
             st.metric("Vial Concentration", f"{conc_reta:.2f} mg/mL")
-            st.write(f"**Reference:** {10/conc_reta * 0.5:.1f} u = 0.5 mg | {10/conc_reta * 2.0:.1f} u = 2.0 mg")
+            st.write(f"**Reference:** {(0.25 / conc_reta) * 100:.1f} u = 250 mcg (0.25 mg) | {(0.5 / conc_reta) * 100:.1f} u = 500 mcg (0.5 mg)")
             st.markdown("""
             * **Vial Content:** 10 mg dry powder
             * **Recommended BAC Water:** 2.0 mL (200 units)
             * **Resulting Concentration:** 5 mg/mL
-            * **Syringe Draw:** 40 units = 2 mg dose
+            * **Syringe Draw:** 5 units = 250 mcg (0.25 mg) dose
             """)
 
         with col_p2:
@@ -1219,7 +1219,7 @@ elif menu == "Peptide Protocol & Tracker":
                 "BPC-157 / TB-500 Blend (10mg vial)", 
                 "CJC w/o DAC (10mg vial)"
             ])
-            desired_dose_mcg = st.number_input("Desired Research Dose (mcg)", min_value=50, max_value=5000, value=500, step=50)
+            desired_dose_mcg = st.number_input("Desired Research Dose (mcg)", min_value=50, max_value=5000, value=250, step=50)
         with calc_col2:
             if "Retatrutide" in sel_pep:
                 current_conc = conc_reta
@@ -1241,7 +1241,7 @@ elif menu == "Peptide Protocol & Tracker":
         st.markdown("""
         | Peptide Compound | Schedule | Standard Dose | Syringe Draw (1 mL / 100u) | Administration Timing |
         | :--- | :--- | :--- | :--- | :--- |
-        | **1. Retatrutide** (10mg) | **Monday Mornings** (1x / week) | 1.0 mg – 2.0 mg | **40 Units** (for 2 mg) | Morning after waking |
+        | **1. Retatrutide** (10mg) | **Monday Mornings** (1x / week) | 250 mcg (0.25 mg) | **5 Units** (for 250 mcg) | Morning after waking |
         | **2. BPC-157 + TB-500** (10mg Blend) | **Daily** (7 days / week) | 250 mcg – 500 mcg blend | **10 Units** (for 500 mcg) | Morning or Evening |
         | **3. CJC w/o DAC** (10mg) | **Weeknights** (Mon – Fri) | 100 mcg – 200 mcg | **2 to 4 Units** (for 100-200 mcg) | Empty stomach before bed |
         """)
@@ -1252,7 +1252,7 @@ elif menu == "Peptide Protocol & Tracker":
         days_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         schedule_data = []
         for d in days_week:
-            reta_sched = "✅ Retatrutide (2 mg / 40u)" if d == "Monday" else "—"
+            reta_sched = "✅ Retatrutide (250 mcg / 5u)" if d == "Monday" else "—"
             bpc_sched = "✅ BPC-157/TB-500 (500 mcg / 10u)"
             cjc_sched = "✅ CJC w/o DAC (100-200 mcg / 2-4u)" if d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] else "—"
             schedule_data.append({
@@ -1274,7 +1274,7 @@ elif menu == "Peptide Protocol & Tracker":
         col_chk1, col_chk2, col_chk3 = st.columns(3)
         with col_chk1:
             is_reta_day = (log_day == "Monday")
-            reta_checked = st.checkbox("Retatrutide (2 mg / 40 Units)", value=is_reta_day, key="chk_reta")
+            reta_checked = st.checkbox("Retatrutide (250 mcg / 5 Units)", value=is_reta_day, key="chk_reta")
         with col_chk2:
             bpc_checked = st.checkbox("BPC-157 / TB-500 (500 mcg / 10 Units)", value=True, key="chk_bpc")
         with col_chk3:
@@ -1303,7 +1303,7 @@ elif menu == "Peptide Protocol & Tracker":
             pep_log = {
                 "Date": log_date.strftime("%Y-%m-%d"),
                 "Day": log_day,
-                "Retatrutide": "Logged (2mg / 40u)" if reta_checked else "N/A",
+                "Retatrutide": "Logged (250mcg / 5u)" if reta_checked else "N/A",
                 "BPC_TB_Blend": "Logged (500mcg / 10u)" if bpc_checked else "N/A",
                 "CJC_wo_DAC": "Logged (100-200mcg / 2-4u)" if cjc_checked else "N/A",
                 "Injection Site": site,
