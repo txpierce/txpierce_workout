@@ -193,6 +193,7 @@ menu = st.sidebar.radio("Go to Module:", [
     "Daily Discipline Dashboard",
     "12-Week Lift Engine (Real-Time Tracker)",
     "Nutrition & Macro Engine",
+    "Peptide Protocol & Tracker",
     "Sunday Review & Accountability"
 ])
 
@@ -1149,6 +1150,223 @@ elif menu == "Nutrition & Macro Engine":
             st.markdown("<br>", unsafe_allow_html=True)
 
 # MODULE 4: SUNDAY REVIEW & ACCOUNTABILITY
+# MODULE 4: PEPTIDE RESEARCH PROTOCOL & TRACKER
+elif menu == "Peptide Protocol & Tracker":
+    st.header("🧪 Peptide Research Protocol, Reconstitution & Dosing Tracker")
+    st.caption("Research Protocol Blueprint for Retatrutide, BPC-157/TB-500 Blend, and CJC w/o DAC (Mod GRF 1-29)")
+
+    tab1, tab2, tab3, tab4 = st.tabs([
+        "🧪 Reconstitution Calculator", 
+        "📅 Dosing & Schedule Blueprint", 
+        "💉 Injection & Log Tracker", 
+        "❄️ Storage & Best Practices"
+    ])
+
+    with tab1:
+        st.subheader("Phase 1: Reconstitution Instructions & Calculator")
+        st.info("💡 **Required Reconstitution Supplies:** Bacteriostatic Water (BAC Water), Alcohol Prep Pads, 1 mL (100 Unit) Insulin Syringes.")
+
+        col_p1, col_p2, col_p3 = st.columns(3)
+
+        with col_p1:
+            st.markdown("### 1. Retatrutide (10 mg Vial)")
+            st.caption("Source: Iron X Labs")
+            bac_reta = st.number_input("BAC Water Added (mL)", min_value=0.5, max_value=5.0, value=2.0, step=0.5, key="reta_bac")
+            conc_reta = 10.0 / bac_reta
+            st.metric("Vial Concentration", f"{conc_reta:.2f} mg/mL")
+            st.write(f"**Reference:** {10/conc_reta * 0.5:.1f} u = 0.5 mg | {10/conc_reta * 2.0:.1f} u = 2.0 mg")
+            st.markdown("""
+            * **Vial Content:** 10 mg dry powder
+            * **Recommended BAC Water:** 2.0 mL (200 units)
+            * **Resulting Concentration:** 5 mg/mL
+            * **Syringe Draw:** 40 units = 2 mg dose
+            """)
+
+        with col_p2:
+            st.markdown("### 2. BPC-157 / TB-500 Blend (10 mg Total)")
+            st.caption("Source: Kingdom Peptides (1:1 Ratio = 5mg BPC / 5mg TB)")
+            bac_blend = st.number_input("BAC Water Added (mL)", min_value=0.5, max_value=5.0, value=2.0, step=0.5, key="blend_bac")
+            conc_blend = 10.0 / bac_blend
+            st.metric("Total Blend Conc.", f"{conc_blend:.2f} mg/mL")
+            st.write(f"**Reference:** 10 units = 500 mcg total blend (250 mcg BPC + 250 mcg TB)")
+            st.markdown("""
+            * **Vial Content:** 10 mg blend (5mg BPC + 5mg TB)
+            * **Recommended BAC Water:** 2.0 mL (200 units)
+            * **Resulting Concentration:** 5 mg/mL total blend
+            * **Syringe Draw:** 10 units = 500 mcg blend
+            """)
+
+        with col_p3:
+            st.markdown("### 3. CJC w/o DAC (Mod GRF 1-29) (10 mg)")
+            st.caption("Source: Iron X Labs")
+            bac_cjc = st.number_input("BAC Water Added (mL)", min_value=0.5, max_value=5.0, value=2.0, step=0.5, key="cjc_bac")
+            conc_cjc = 10.0 / bac_cjc
+            st.metric("Vial Concentration", f"{conc_cjc:.2f} mg/mL")
+            st.write(f"**Reference:** 2 units = 100 mcg | 4 units = 200 mcg (at 2 mL BAC)")
+            st.markdown("""
+            * **Vial Content:** 10 mg dry powder
+            * **Recommended BAC Water:** 2.0 mL (or 3.0 mL for higher precision)
+            * **Resulting Concentration:** 5 mg/mL (at 2 mL) / 3.33 mg/mL (at 3 mL)
+            * **Syringe Draw:** 2 units = 100 mcg / 4 units = 200 mcg
+            """)
+
+        st.markdown("---")
+        st.subheader("🧮 Interactive Custom Dosage Syringe Draw Calculator")
+        calc_col1, calc_col2 = st.columns(2)
+        with calc_col1:
+            sel_pep = st.selectbox("Select Peptide for Calculation:", [
+                "Retatrutide (10mg vial)", 
+                "BPC-157 / TB-500 Blend (10mg vial)", 
+                "CJC w/o DAC (10mg vial)"
+            ])
+            desired_dose_mcg = st.number_input("Desired Research Dose (mcg)", min_value=50, max_value=5000, value=500, step=50)
+        with calc_col2:
+            if "Retatrutide" in sel_pep:
+                current_conc = conc_reta
+            elif "BPC-157" in sel_pep:
+                current_conc = conc_blend
+            else:
+                current_conc = conc_cjc
+            
+            dose_mg = desired_dose_mcg / 1000.0
+            vol_ml = dose_mg / current_conc if current_conc > 0 else 0
+            units_draw = vol_ml * 100.0
+            
+            st.metric("Required Insulin Syringe Draw", f"{units_draw:.1f} Units", f"{vol_ml:.3f} mL volume")
+            st.caption(f"Based on a concentration of {current_conc:.2f} mg/mL ({desired_dose_mcg} mcg = {dose_mg:.3f} mg)")
+
+    with tab2:
+        st.subheader("Phase 2: Dosing & Weekly Schedule Blueprint")
+        
+        st.markdown("""
+        | Peptide Compound | Schedule | Standard Dose | Syringe Draw (1 mL / 100u) | Administration Timing |
+        | :--- | :--- | :--- | :--- | :--- |
+        | **1. Retatrutide** (10mg) | **Monday Mornings** (1x / week) | 1.0 mg – 2.0 mg | **40 Units** (for 2 mg) | Morning after waking |
+        | **2. BPC-157 + TB-500** (10mg Blend) | **Daily** (7 days / week) | 250 mcg – 500 mcg blend | **10 Units** (for 500 mcg) | Morning or Evening |
+        | **3. CJC w/o DAC** (10mg) | **Weeknights** (Mon – Fri) | 100 mcg – 200 mcg | **2 to 4 Units** (for 100-200 mcg) | Empty stomach before bed |
+        """)
+
+        st.markdown("---")
+        st.subheader("📅 Weekly Administration Master Visual Matrix")
+        
+        days_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        schedule_data = []
+        for d in days_week:
+            reta_sched = "✅ Retatrutide (2 mg / 40u)" if d == "Monday" else "—"
+            bpc_sched = "✅ BPC-157/TB-500 (500 mcg / 10u)"
+            cjc_sched = "✅ CJC w/o DAC (100-200 mcg / 2-4u)" if d in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] else "—"
+            schedule_data.append({
+                "Day": d,
+                "Retatrutide (Weekly)": reta_sched,
+                "BPC-157 / TB-500 (Daily)": bpc_sched,
+                "CJC w/o DAC (Mon-Fri)": cjc_sched
+            })
+        st.dataframe(pd.DataFrame(schedule_data), use_container_width=True)
+
+    with tab3:
+        st.subheader("💉 Daily Injection Tracker & Administration Log")
+        
+        log_date = st.date_input("Administration Date", datetime.date.today(), key="pep_log_date")
+        log_day = log_date.strftime("%A")
+        
+        st.write(f"**Scheduled Protocol for {log_day} ({log_date.strftime('%Y-%m-%d')}):**")
+        
+        col_chk1, col_chk2, col_chk3 = st.columns(3)
+        with col_chk1:
+            is_reta_day = (log_day == "Monday")
+            reta_checked = st.checkbox("Retatrutide (2 mg / 40 Units)", value=is_reta_day, key="chk_reta")
+        with col_chk2:
+            bpc_checked = st.checkbox("BPC-157 / TB-500 (500 mcg / 10 Units)", value=True, key="chk_bpc")
+        with col_chk3:
+            is_cjc_day = (log_day in ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"])
+            cjc_checked = st.checkbox("CJC w/o DAC (100-200 mcg / 2-4 Units)", value=is_cjc_day, key="chk_cjc")
+
+        st.markdown("---")
+        inj_col1, inj_col2 = st.columns(2)
+        with inj_col1:
+            site = st.selectbox("Subcutaneous Injection Site:", [
+                "Abdomen - Lower Left", 
+                "Abdomen - Lower Right", 
+                "Abdomen - Upper Left", 
+                "Abdomen - Upper Right", 
+                "Thigh - Left Outer", 
+                "Thigh - Right Outer", 
+                "Glute / Hip Area"
+            ])
+        with inj_col2:
+            pep_notes = st.text_input("Protocol Notes (Tolerance, Energy, Recovery, Joint Health):", "Painless subcutaneous draw, good recovery focus.")
+
+        pep_csv = "chase_the_lion_peptide_history.csv"
+        pep_excel = "chase_the_lion_peptide_history.xlsx"
+
+        if st.button("💾 Log Peptide Administration Session"):
+            pep_log = {
+                "Date": log_date.strftime("%Y-%m-%d"),
+                "Day": log_day,
+                "Retatrutide": "Logged (2mg / 40u)" if reta_checked else "N/A",
+                "BPC_TB_Blend": "Logged (500mcg / 10u)" if bpc_checked else "N/A",
+                "CJC_wo_DAC": "Logged (100-200mcg / 2-4u)" if cjc_checked else "N/A",
+                "Injection Site": site,
+                "Notes": pep_notes
+            }
+            
+            df_p = pd.DataFrame([pep_log])
+            if os.path.exists(pep_csv):
+                df_p.to_csv(pep_csv, mode="a", header=False, index=False)
+            else:
+                df_p.to_csv(pep_csv, mode="w", header=True, index=False)
+                
+            try:
+                if os.path.exists(pep_excel):
+                    df_ex_p = pd.read_excel(pep_excel)
+                    df_comb_p = pd.concat([df_ex_p, df_p], ignore_index=True)
+                    df_comb_p.to_excel(pep_excel, index=False)
+                else:
+                    df_p.to_excel(pep_excel, index=False)
+            except Exception:
+                pass
+                
+            gs_url = st.session_state.get("gsheet_url", "").strip()
+            if gs_url:
+                try:
+                    payload = json.dumps(pep_log).encode("utf-8")
+                    req = urllib.request.Request(gs_url, data=payload, headers={"Content-Type": "application/json"})
+                    with urllib.request.urlopen(req, timeout=5) as resp:
+                        pass
+                except Exception:
+                    pass
+            
+            st.success("✅ Peptide research session logged successfully to local database & Excel!")
+
+        if os.path.exists(pep_csv):
+            st.markdown("---")
+            st.subheader("📜 Peptide Administration Log History")
+            df_pep_hist = pd.read_csv(pep_csv)
+            st.dataframe(df_pep_hist, use_container_width=True)
+
+    with tab4:
+        st.subheader("❄️ Storage, Handling & Best Practices Guide")
+        
+        st.markdown("""
+        ### 1. ❄️ Refrigeration & Storage
+        * **Reconstitution Storage:** Always keep reconstituted peptide vials stored in a standard refrigerator (**36°F to 46°F / 2°C to 8°C**).
+        * **Do NOT Freeze:** Never freeze reconstituted liquid peptide vials, as freezing damages peptide bond integrity.
+        * **Lyophilized Dry Powder:** Unreconstituted dry vials can be kept in a cool dark place or freezer prior to mixing.
+
+        ### 2. 🧼 Swabbing & Sterility Protocol
+        * **Double Swab Rule:** Always wipe the rubber stopper of **both** the Bacteriostatic Water vial and the Peptide vial with a fresh alcohol prep pad before inserting any needle.
+        * **Air Drying:** Allow the alcohol to dry completely on the stopper (5–10 seconds) before insertion.
+
+        ### 3. 💉 Subcutaneous Injection Protocol
+        * **Injection Area:** Administer subcutaneously (SQ) into the fatty tissue of the lower abdomen (staying at least 2 inches away from the navel) or outer thigh.
+        * **Pinch & Angle:** Pinch a small fold of skin and insert the fine insulin needle at a **45° to 90° angle**.
+        * **Site Rotation:** Rotate injection sites daily (left abdomen -> right abdomen -> outer thigh) to prevent lipodystrophy or tissue irritation.
+
+        ### 4. 🕒 CJC w/o DAC Timing Rule
+        * **Empty Stomach Window:** Administer CJC w/o DAC at bedtime on an empty stomach (**at least 2 hours after your last meal**).
+        * **Carb & Fat Avoidance:** Elevated blood glucose and insulin levels blunt growth hormone pulse release, so avoid eating carbs or fats directly before night administration.
+        """)
+
 elif menu == "Sunday Review & Accountability":
     st.header("Sunday Review & Weekly Check-In")
     st.slider("Rate This Week's Discipline", 1, 5, 5)
