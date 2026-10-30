@@ -35,7 +35,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-### Custom CSS Styling matching Hyrox Top Navigation & Clean Dark Cards
+### Custom CSS Styling: Card layouts, mobile responsiveness & exact Hyrox top navigation style
 st.markdown("""
     <style>
     .main {
@@ -49,7 +49,7 @@ st.markdown("""
     .tactical-card {
         background-color: #1E1E1E;
         border: 1px solid #2D2D2D;
-        padding: 1.5rem;
+        padding: 1.25rem;
         border-radius: 0.75rem;
         margin-bottom: 1rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
@@ -59,12 +59,12 @@ st.markdown("""
         border-left: 4px solid #FFCC00;
         padding: 1rem;
         border-radius: 4px;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.25rem;
     }
     .scripture-text {
         font-style: italic;
         color: #e2e8f0;
-        font-size: 1.1rem;
+        font-size: 1.05rem;
     }
     .scripture-ref {
         text-align: right;
@@ -79,14 +79,22 @@ st.markdown("""
         border: none;
         padding: 0.5rem 1rem;
         font-weight: 700;
+        width: 100%;
     }
     .stButton>button:hover {
         background-color: #e6b800;
     }
-    /* Hide Streamlit default hamburger menu & footer */
+    /* Hide Streamlit default hamburger menu & footer for app-like mobile view */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
+    
+    /* Responsive stacking fixes for mobile devices */
+    @media(max-width: 768px) {
+        .stColumns {
+            flex-direction: column !important;
+        }
+    }
     </style>
 """, unsafe_allow_html=True)
 
@@ -102,21 +110,21 @@ if 'active_tab' not in st.session_state:
 
 ### Top Header Bar with Horizontal Navigation Tabs (matching the Hyrox UI style)
 st.markdown("""
-    <div style="background-color: #000000; border-bottom: 1px solid #2D2D2D; padding: 12px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 25px; border-radius: 8px;">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <div style="background-color: #FFCC00; color: #000000; font-weight: 900; padding: 6px 14px; font-size: 1.2rem; letter-spacing: 1px; border-radius: 6px;">TXP</div>
+    <div style="background-color: #000000; border-bottom: 1px solid #2D2D2D; padding: 12px 15px; display: flex; flex-direction: column; md:flex-row; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 8px; gap: 10px;">
+        <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
+            <div style="background-color: #FFCC00; color: #000000; font-weight: 900; padding: 6px 12px; font-size: 1.1rem; letter-spacing: 1px; border-radius: 6px;">TXP</div>
             <div>
-                <h1 style="font-size: 1.1rem; font-weight: bold; color: #FFFFFF; margin: 0; letter-spacing: 0.5px;">CHASE THE LION ECOSYSTEM</h1>
-                <p style="font-size: 0.75rem; color: #9CA3AF; margin: 0;">Daily Discipline | 12-Week Lift Engine | Peptides & Faith</p>
+                <h1 style="font-size: 1rem; font-weight: bold; color: #FFFFFF; margin: 0; letter-spacing: 0.5px;">CHASE THE LION ECOSYSTEM</h1>
+                <p style="font-size: 0.7rem; color: #9CA3AF; margin: 0;">Daily Discipline | 12-Week Lift Engine | Peptides & Faith</p>
             </div>
         </div>
     </div>
 """, unsafe_allow_html=True)
 
-# Streamlit Radio buttons styled as horizontal top tabs via columns
+# Horizontal Navigation Tabs
 tabs = [
     "Dashboard", 
-    "12-Week Lift Engine", 
+    "12-Week Master", 
     "Nutrition & Macros", 
     "Peptide Tracker", 
     "Faith Reflection", 
@@ -127,8 +135,6 @@ tab_cols = st.columns(len(tabs))
 for idx, tab_name in enumerate(tabs):
     with tab_cols[idx]:
         is_selected = (st.session_state.active_tab == tab_name)
-        btn_bg = "#FFCC00" if is_selected else "#1F2937"
-        btn_fg = "#000000" if is_selected else "#FFFFFF"
         if st.button(tab_name, key=f"tab_btn_{idx}", use_container_width=True):
             st.session_state.active_tab = tab_name
             st.rerun()
@@ -253,14 +259,14 @@ if current_tab == "Dashboard":
 
 
 # ==========================================
-# TAB 2: 12-WEEK LIFT ENGINE
+# TAB 2: 12-WEEK MASTER (LIFT ENGINE)
 # ==========================================
-elif current_tab == "12-Week Lift Engine":
+elif current_tab == "12-Week Master":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Lift Engine</span>
-            <h2 style="margin-top: 10px; margin-bottom: 5px;">12-Week Ultimate Lift Engine — Real-Time Set Tracker</h2>
-            <p style="color: #9CA3AF; font-size: 13px; margin: 0;">Log working weights, track sets in real time, and auto-sync progress.</p>
+            <h2 style="margin-top: 10px; margin-bottom: 5px;">12-Week Master Training Program & Set Tracker</h2>
+            <p style="color: #9CA3AF; font-size: 13px; margin: 0;">Log working weights and check off sets. Data saves automatically in the tactical card layout.</p>
         </div>
     """, unsafe_allow_html=True)
 
@@ -303,10 +309,10 @@ elif current_tab == "12-Week Lift Engine":
             ]
         elif "Push" in day_str:
             return [
-                {"series": "A-Series", "exercise": "Barbell Bench Press / Incline Press", "sets": 4, "reps": "6-8", "rpe": "8", "rest": "2 min", "default_wt": 185},
-                {"series": "B1", "exercise": "Seated Overhead Dumbbell Press", "sets": 3, "reps": "8-10", "rpe": "8", "rest": "90 sec", "default_wt": 60},
-                {"series": "B2", "exercise": "Weighted Dips", "sets": 3, "reps": "8-12", "rpe": "8", "rest": "90 sec", "default_wt": 45},
-                {"series": "C-Series", "exercise": "Cable Lateral Raises", "sets": 3, "reps": "12-15", "rpe": "9", "rest": "60 sec", "default_wt": 25}
+                {"series": "A-Series", "exercise": "Back / Incline Press", "sets": 4, "reps": "6", "rpe": "8", "rest": "2 min", "default_wt": 185},
+                {"series": "B1", "exercise": "Reverse Lunge", "sets": 3, "reps": "10/leg", "rpe": "8", "rest": "90 sec", "default_wt": 60},
+                {"series": "B2", "exercise": "Sled Push", "sets": 6, "reps": "10 m", "rpe": "8", "rest": "90 sec", "default_wt": 150},
+                {"series": "C-Series", "exercise": "Bike Erg Engine", "sets": 6, "reps": "1:00 hard / 1:00 easy", "rpe": "9", "rest": "60 sec", "default_wt": 0}
             ]
         elif "Pull" in day_str:
             return [
@@ -330,32 +336,38 @@ elif current_tab == "12-Week Lift Engine":
             if st.session_state.get(set_key, False):
                 completed_sets_count += 1
 
+    progress_pct = completed_sets_count / total_target_sets if total_target_sets > 0 else 0.0
+
     st.markdown(f"""
         <div class="tactical-card">
-            <h3>⏱️ Real-Time Workout Progress: {completed_sets_count} / {total_target_sets} Sets Completed</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <h3 style="margin: 0;">11-Week Master Training Program</h3>
+                <span style="color: #FFCC00; font-weight: bold;">{int(progress_pct * 100)}% Completed ({completed_sets_count}/{total_target_sets} sets)</span>
+            </div>
+            <div style="background-color: #000; border-radius: 4px; height: 8px; width: 100%; overflow: hidden;">
+                <div style="background-color: #FFCC00; width: {int(progress_pct * 100)}%; height: 100%;"></div>
+            </div>
         </div>
     """, unsafe_allow_html=True)
 
     for idx, ex in enumerate(current_workout):
         st.markdown(f"""
             <div class="tactical-card">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <span style="color: #FFCC00; font-weight: bold;">{ex['series']} | {ex['exercise']}</span>
-                    <span style="color: #9CA3AF; font-size: 12px;">Target: {ex['sets']} Sets x {ex['reps']} Reps @ RPE {ex['rpe']}</span>
-                </div>
+                <div style="margin-bottom: 4px; font-weight: bold; color: #FFFFFF; font-size: 1.05rem;">{ex['exercise']}</div>
+                <div style="color: #9CA3AF; font-size: 0.85rem; margin-bottom: 10px;">Target: {ex['sets']} | Prescribed: {ex['reps']} (RPE {ex['rpe']})</div>
         """, unsafe_allow_html=True)
         
-        col_input, col_sets = st.columns([1, 3])
+        col_input, col_sets = st.columns([1, 2])
         with col_input:
             wt_key = f"{workout_key_prefix}_ex{idx}_wt"
-            st.number_input(f"Weight Used (lbs)", value=ex['default_wt'], step=5, key=wt_key)
+            st.text_input(f"Actual Load...", value=str(ex['default_wt']), key=wt_key, label_visibility="collapsed")
         with col_sets:
-            st.write("**Mark Completed Sets:**")
+            st.markdown("<span style='font-size:0.8rem; color:#9CA3AF;'>CHECK SETS:</span>", unsafe_allow_html=True)
             set_cols = st.columns(ex['sets'])
             for s in range(1, ex['sets'] + 1):
                 set_key = f"{workout_key_prefix}_ex{idx}_set{s}"
                 with set_cols[s - 1]:
-                    st.checkbox(f"Set {s}", key=set_key)
+                    st.checkbox(f"{s}", key=set_key)
         st.markdown('</div>', unsafe_allow_html=True)
 
     session_notes = st.text_area("Session Notes (Pump Quality, Joint Health, Energy Level):")
@@ -365,7 +377,7 @@ elif current_tab == "12-Week Lift Engine":
             "Date": datetime.date.today().strftime("%Y-%m-%d"),
             "Phase": phase, "Week": week, "Day": day,
             "Sets Completed": f"{completed_sets_count}/{total_target_sets}",
-            "Progress": f"{int((completed_sets_count / total_target_sets if total_target_sets > 0 else 1.0) * 100)}%",
+            "Progress": f"{int(progress_pct * 100)}%",
             "Notes": session_notes
         }
         df_new = pd.DataFrame([new_log])
