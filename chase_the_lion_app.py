@@ -10,7 +10,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- Custom Styling to Mirror Hyrox-Workout-Tracker Dark Theme ---
+# --- Custom Styling to Mirror Dark Theme Interface ---
 st.markdown("""
     <style>
     .main {
@@ -47,7 +47,8 @@ menu = st.sidebar.selectbox(
     [
         "Peptide Protocol & Tracker",
         "Daily Review & Reflection Log",
-        "Google Calendar & Daily Schedule"
+        "Google Calendar & Daily Schedule",
+        "12-Week Training Program & Tracker"
     ]
 )
 
@@ -166,3 +167,50 @@ elif menu == "Google Calendar & Daily Schedule":
     """)
     
     st.info("💡 **Tip:** To sync this schedule with Google Calendar, you can copy these time blocks directly into your Google Calendar app or Google Workspace account.")
+
+# ==========================================
+# MODULE 4: 12-WEEK TRAINING PROGRAM & TRACKER
+# ==========================================
+elif menu == "12-Week Training Program & Tracker":
+    st.header("🏋️‍♂️ 12-Week Training Architecture & Logs")
+    st.write("Select your active week and log your daily sets, weights, and RPE targets.")
+    
+    week_selection = st.selectbox(
+        "Select Training Week",
+        [
+            "Phase 1: Week 1 (Baseline)",
+            "Phase 1: Week 2 (Progression)",
+            "Phase 1: Week 3 (Complexity)",
+            "Phase 1: Week 4 (Peak Base)",
+            "Phase 2: Week 5 (New Patterns)",
+            "Phase 2: Week 6 (Volume & Tempo)",
+            "Phase 2: Week 7 (High Density)",
+            "Phase 2: Week 8 (Peak Phase 2)",
+            "Phase 3: Week 9 (Entry to Peak)",
+            "Phase 3: Week 10 (High-Density)",
+            "Phase 3: Week 11 (Metabolic Peak)",
+            "Phase 3: Week 12 (Pump Deload)"
+        ]
+    )
+    
+    st.markdown(f"### Currently viewing: **{week_selection}**")
+    st.info("Log your working weights and completion checkmarks below to track progressive overload across your 12-week block.")
+    
+    # Sample interactive logging table for current training day
+    train_day = st.radio("Select Training Day", ["Day 1: Push", "Day 2: Pull", "Day 3: Lower Hypertrophy", "Day 5: Upper Pump"])
+    
+    if "Push" in train_day:
+        data = {
+            "Series": ["A-Series", "B1", "B1", "B2", "B2", "C-Series", "C-Series"],
+            "Exercise": ["Overhead / Incline Press", "Flat DB / Barbell Press", "Row / High Row", "Arnold Press", "Skull Crushers / Tricep Ext", "Cable Fly", "Tricep Pushdown"],
+            "Sets": [5, 3, 3, 3, 3, 3, 3],
+            "Reps": ["5-8", "8-12", "10-15", "8-12", "6-10", "12-20", "12-20"],
+            "Target RPE": [8, 8, 8, 8, 8, 8, 8],
+            "Logged Weight (lbs)": [90, 55, 45, 30, 80, 30, 80],
+            "Completed": [True, True, True, True, True, True, True]
+        }
+        df_train = pd.DataFrame(data)
+        edited_df = st.data_editor(df_train, use_container_width=True)
+        
+        if st.button("💾 Save Workout Log"):
+            st.success("✅ Workout performance logged successfully!")
