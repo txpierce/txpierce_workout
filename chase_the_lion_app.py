@@ -32,18 +32,15 @@ st.set_page_config(
     page_title="TXP ✝ Chase The Lion — Ecosystem",
     page_icon="✝️",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"
 )
 
-### Custom CSS Styling matching the clean card-based UI and Hyrox Yellow accents (#FFCC00)
+### Custom CSS Styling matching Hyrox Top Navigation & Clean Dark Cards
 st.markdown("""
     <style>
     .main {
         background-color: #0e1117;
         color: #ffffff;
-    }
-    .sidebar .sidebar-content {
-        background-color: #161b22;
     }
     h1, h2, h3 {
         color: #f0f6fc;
@@ -86,6 +83,10 @@ st.markdown("""
     .stButton>button:hover {
         background-color: #e6b800;
     }
+    /* Hide Streamlit default hamburger menu & footer */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
     </style>
 """, unsafe_allow_html=True)
 
@@ -96,37 +97,46 @@ if 'workout_logs' not in st.session_state:
     st.session_state.workout_logs = []
 if 'peptide_logs' not in st.session_state:
     st.session_state.peptide_logs = {}
+if 'active_tab' not in st.session_state:
+    st.session_state.active_tab = "Dashboard"
 
-### Top Brand Header matching the reference UI layout
+### Top Header Bar with Horizontal Navigation Tabs (matching the Hyrox UI style)
 st.markdown("""
-    <div style="background-color: #000000; border-bottom: 1px solid #2D2D2D; padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 8px;">
+    <div style="background-color: #000000; border-bottom: 1px solid #2D2D2D; padding: 12px 20px; display: flex; flex-direction: row; justify-content: space-between; align-items: center; margin-bottom: 25px; border-radius: 8px;">
         <div style="display: flex; align-items: center; gap: 15px;">
             <div style="background-color: #FFCC00; color: #000000; font-weight: 900; padding: 6px 14px; font-size: 1.2rem; letter-spacing: 1px; border-radius: 6px;">TXP</div>
             <div>
-                <h1 style="font-size: 1.1rem; font-weight: bold; color: #FFFFFF; margin: 0; letter-spacing: 0.5px;">TX_PIERCE CHASE THE LION APP</h1>
-                <p style="font-size: 0.75rem; color: #9CA3AF; margin: 0;">12-Week Master Periodized Program | Habit & Peptide Ecosystem</p>
+                <h1 style="font-size: 1.1rem; font-weight: bold; color: #FFFFFF; margin: 0; letter-spacing: 0.5px;">CHASE THE LION ECOSYSTEM</h1>
+                <p style="font-size: 0.75rem; color: #9CA3AF; margin: 0;">Daily Discipline | 12-Week Lift Engine | Peptides & Faith</p>
             </div>
         </div>
     </div>
 """, unsafe_allow_html=True)
 
-### Sidebar Navigation & Customization
-st.sidebar.markdown("""
-    <div style="background-color: #FFCC00; color: #000000; font-weight: 900; padding: 8px 12px; font-size: 1.1rem; text-align: center; border-radius: 6px; margin-bottom: 15px;">
-        TXP WARRIOR SYSTEM
-    </div>
-""", unsafe_allow_html=True)
+# Streamlit Radio buttons styled as horizontal top tabs via columns
+tabs = [
+    "Dashboard", 
+    "12-Week Lift Engine", 
+    "Nutrition & Macros", 
+    "Peptide Tracker", 
+    "Faith Reflection", 
+    "Daily Schedule"
+]
 
-menu = st.sidebar.radio("Go to Module:", [
-    "Dashboard & Daily Discipline",
-    "12-Week Lift Engine (Real-Time Tracker)",
-    "Nutrition & Macro Engine",
-    "Peptide Protocol & Tracker",
-    "Daily Review & Reflection Log",
-    "Google Calendar & Daily Schedule"
-])
+tab_cols = st.columns(len(tabs))
+for idx, tab_name in enumerate(tabs):
+    with tab_cols[idx]:
+        is_selected = (st.session_state.active_tab == tab_name)
+        btn_bg = "#FFCC00" if is_selected else "#1F2937"
+        btn_fg = "#000000" if is_selected else "#FFFFFF"
+        if st.button(tab_name, key=f"tab_btn_{idx}", use_container_width=True):
+            st.session_state.active_tab = tab_name
+            st.rerun()
 
-st.sidebar.markdown("---")
+current_tab = st.session_state.active_tab
+st.markdown("---")
+
+# Sidebar Google Sheets Integration Settings (collapsed)
 with st.sidebar.expander("📊 Google Sheets Live Sync Setup", expanded=False):
     st.write("**Save workouts directly to Google Sheets!**")
     webhook_url = st.text_input("Google Web App URL:", value="https://script.google.com/macros/s/AKfycbyTr1VtWCvnb6_4IwMi64pDvTy-uDtL4DtHYls1wRq8s0rzOJLl7DD30_6IQZkajktfUQ/exec", key="gsheet_url")
@@ -147,13 +157,13 @@ with st.sidebar.expander("📊 Google Sheets Live Sync Setup", expanded=False):
 
 
 # ==========================================
-# MODULE 1: DAILY DISCIPLINE DASHBOARD
+# TAB 1: DASHBOARD
 # ==========================================
-if menu == "Dashboard & Daily Discipline":
+if current_tab == "Dashboard":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Command Center</span>
-            <h2 style="margin-top: 10px; margin-bottom: 5px;">Daily Discipline Tracker</h2>
+            <h2 style="margin-top: 10px; margin-bottom: 5px;">Daily Discipline Tracker & Vitals</h2>
             <p style="color: #9CA3AF; font-size: 13px; margin: 0;">Execute your daily core rules, track vitals, and anchor your mind in Scripture.</p>
         </div>
     """, unsafe_allow_html=True)
@@ -243,9 +253,9 @@ if menu == "Dashboard & Daily Discipline":
 
 
 # ==========================================
-# MODULE 2: 12-WEEK LIFT ENGINE
+# TAB 2: 12-WEEK LIFT ENGINE
 # ==========================================
-elif menu == "12-Week Lift Engine (Real-Time Tracker)":
+elif current_tab == "12-Week Lift Engine":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Lift Engine</span>
@@ -377,9 +387,9 @@ elif menu == "12-Week Lift Engine (Real-Time Tracker)":
 
 
 # ==========================================
-# MODULE 3: NUTRITION & MACRO ENGINE
+# TAB 3: NUTRITION & MACROS
 # ==========================================
-elif menu == "Nutrition & Macro Engine":
+elif current_tab == "Nutrition & Macros":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Nutrition Engine</span>
@@ -405,9 +415,9 @@ elif menu == "Nutrition & Macro Engine":
 
 
 # ==========================================
-# MODULE 4: PEPTIDE PROTOCOL & TRACKER
+# TAB 4: PEPTIDE TRACKER
 # ==========================================
-elif menu == "Peptide Protocol & Tracker":
+elif current_tab == "Peptide Tracker":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Protocol Tracker</span>
@@ -447,7 +457,7 @@ elif menu == "Peptide Protocol & Tracker":
         }
         df_pep = pd.DataFrame([pep_entry])
         df_pep.to_csv(PEPTIDE_HISTORY_FILE, mode='a', header=not os.path.exists(PEPTIDE_HISTORY_FILE), index=False)
-        script_success = st.success("✅ Peptide dose logged successfully!")
+        st.success("✅ Peptide dose logged successfully!")
         
     if os.path.exists(PEPTIDE_HISTORY_FILE):
         st.subheader("📜 Peptide Protocol History")
@@ -455,9 +465,9 @@ elif menu == "Peptide Protocol & Tracker":
 
 
 # ==========================================
-# MODULE 5: DAILY REVIEW & REFLECTION LOG
+# TAB 5: FAITH REFLECTION
 # ==========================================
-elif menu == "Daily Review & Reflection Log":
+elif current_tab == "Faith Reflection":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Faith Log</span>
@@ -489,9 +499,9 @@ elif menu == "Daily Review & Reflection Log":
 
 
 # ==========================================
-# MODULE 6: GOOGLE CALENDAR & SCHEDULE
+# TAB 6: DAILY SCHEDULE
 # ==========================================
-elif menu == "Google Calendar & Daily Schedule":
+elif current_tab == "Daily Schedule":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Schedule</span>
