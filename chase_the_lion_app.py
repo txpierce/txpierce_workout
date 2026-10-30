@@ -35,7 +35,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-### Custom CSS Styling: Card layouts, mobile responsiveness & exact Hyrox top navigation style
+### Custom CSS Styling matching exact Hyrox Top Navigation & Clean Dark Cards
 st.markdown("""
     <style>
     .main {
@@ -110,7 +110,7 @@ if 'active_tab' not in st.session_state:
 
 ### Top Header Bar with Horizontal Navigation Tabs (matching the Hyrox UI style)
 st.markdown("""
-    <div style="background-color: #000000; border-bottom: 1px solid #2D2D2D; padding: 12px 15px; display: flex; flex-direction: column; md:flex-row; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 8px; gap: 10px;">
+    <div style="background-color: #000000; border-bottom: 1px solid #2D2D2D; padding: 12px 15px; display: flex; flex-direction: column; justify-content: space-between; align-items: center; margin-bottom: 20px; border-radius: 8px; gap: 10px;">
         <div style="display: flex; align-items: center; gap: 12px; width: 100%;">
             <div style="background-color: #FFCC00; color: #000000; font-weight: 900; padding: 6px 12px; font-size: 1.1rem; letter-spacing: 1px; border-radius: 6px;">TXP</div>
             <div>
@@ -121,10 +121,10 @@ st.markdown("""
     </div>
 """, unsafe_allow_html=True)
 
-# Horizontal Navigation Tabs
+# Horizontal Navigation Tabs (matching your Hyrox Tracker UI)
 tabs = [
     "Dashboard", 
-    "12-Week Master", 
+    "11-Week Master", 
     "Nutrition & Macros", 
     "Peptide Tracker", 
     "Faith Reflection", 
@@ -259,13 +259,13 @@ if current_tab == "Dashboard":
 
 
 # ==========================================
-# TAB 2: 12-WEEK MASTER (LIFT ENGINE)
+# TAB 2: 11-WEEK MASTER (LIFT ENGINE)
 # ==========================================
-elif current_tab == "12-Week Master":
+elif current_tab == "11-Week Master":
     st.markdown("""
         <div class="tactical-card">
             <span style="background-color: rgba(255,204,0,0.1); color: #FFCC00; border: 1px solid rgba(255,204,0,0.3); font-size: 11px; padding: 4px 10px; border-radius: 9999px; font-weight: bold; text-transform: uppercase;">Lift Engine</span>
-            <h2 style="margin-top: 10px; margin-bottom: 5px;">12-Week Master Training Program & Set Tracker</h2>
+            <h2 style="margin-top: 10px; margin-bottom: 5px;">11-Week Master Training Program & Set Tracker</h2>
             <p style="color: #9CA3AF; font-size: 13px; margin: 0;">Log working weights and check off sets. Data saves automatically in the tactical card layout.</p>
         </div>
     """, unsafe_allow_html=True)
