@@ -45,7 +45,6 @@
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
-
     <!-- Top Navigation / Header -->
     <header class="bg-black border-b border-gray-800 sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col md:flex-row items-center justify-between gap-4">
